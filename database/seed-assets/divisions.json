@@ -1,0 +1,181 @@
+[
+  {
+    "figmaNodeId": "2:251",
+    "figmaName": "Rectangle (DIVISIONS hero photo, clean background only)",
+    "destPath": "pages/divisions-hero.png",
+    "category": "hero",
+    "page": "divisions",
+    "altText": "ENTAJ S.B.R product bottle with flowing blue cape on a mountain peak at sunrise — Divisions page hero",
+    "note": "VISUAL QA CORRECTION 2026-08-07: original export used node 2:250, which includes the live \"DIVISIONS\" title text baked into the flattened image. Re-exported from node 2:251 (photo layer only, no text) so the app can render the title as live HTML over the photo, matching the shared PageHero component pattern used on all 4 pages. File format is actually PNG (1447x755, not WebP) — corrected the extension from .webp to .png to match true content; convert to WebP during the Phase-4 image-optimization pass if desired. The dark bottom overlay visible behind the text in the original design is a separate flat element (node 2:252) — reproduce as a CSS gradient overlay in the PageHero component rather than baking it into the image."
+  },
+  {
+    "figmaNodeId": "2:641",
+    "figmaName": "SBR Mockup 1",
+    "destPath": "products/product-sbr.webp",
+    "category": "product",
+    "productName": "S.B.R",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "S.B.R product packaging"
+  },
+  {
+    "figmaNodeId": "2:681",
+    "figmaName": "poly 1",
+    "destPath": "products/product-poly-aluminium-chloride.webp",
+    "category": "product",
+    "productName": "Poly Aluminium Chloride",
+    "division": "water-treatment",
+    "recommended": true,
+    "altText": "Poly Aluminium Chloride product packaging"
+  },
+  {
+    "figmaNodeId": "2:682",
+    "figmaName": "Layer 10 1",
+    "destPath": "products/product-magnesium-hydroxide.webp",
+    "category": "product",
+    "productName": "Magnesium Hydroxide",
+    "division": "water-treatment",
+    "recommended": true,
+    "altText": "Magnesium Hydroxide product packaging"
+  },
+  {
+    "figmaNodeId": "2:683",
+    "figmaName": "Layer 11 1",
+    "destPath": "products/product-sodium-carbonate.webp",
+    "category": "product",
+    "productName": "Sodium Carbonate",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Sodium Carbonate product packaging",
+    "note": "Sodium Carbonate (Soda Ash) also appears as a plain catalog row in both Animal Nutrition and Water Treatment tables; this recommended-grid photo is linked to the Animal Nutrition variant by card position — confirm with content owner if it should instead/also link to the Water Treatment row."
+  },
+  {
+    "figmaNodeId": "2:684",
+    "figmaName": "Layer 9 1",
+    "destPath": "products/product-sodium-metabisulfite.webp",
+    "category": "product",
+    "productName": "Sodium Metabisulfite",
+    "division": "water-treatment",
+    "recommended": true,
+    "altText": "Sodium Metabisulfite product packaging"
+  },
+  {
+    "figmaNodeId": "2:685",
+    "figmaName": "Layer 8 1",
+    "destPath": "products/product-sodium-hydroxide.webp",
+    "category": "product",
+    "productName": "Sodium Hydroxide (NaOH)",
+    "division": "water-treatment",
+    "recommended": true,
+    "altText": "Sodium Hydroxide (NaOH) product packaging"
+  },
+  {
+    "figmaNodeId": "2:686",
+    "figmaName": "\\ 1",
+    "destPath": "products/product-potassium-chloride.webp",
+    "category": "product",
+    "productName": "Potassium Chloride",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Potassium Chloride product packaging"
+  },
+  {
+    "figmaNodeId": "2:687",
+    "figmaName": "WhatsApp Image 2026-06-15 at 11.09.18 1",
+    "destPath": "products/product-bentonite.webp",
+    "category": "product",
+    "productName": "Bentonite",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Bentonite product packaging"
+  },
+  {
+    "figmaNodeId": "2:688",
+    "figmaName": "WhatsApp Image 2026-06-15 at 11.07.27 (4) 1",
+    "destPath": "products/product-sodium-bicarbonate.webp",
+    "category": "product",
+    "productName": "Sodium Bicarbonate",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Sodium Bicarbonate product packaging"
+  },
+  {
+    "figmaNodeId": "2:689",
+    "figmaName": "WhatsApp Image 2026-06-15 at 11.07.27 (3) 1",
+    "destPath": "products/product-humic-acid.webp",
+    "category": "product",
+    "productName": "Humic Acid",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Humic Acid product packaging"
+  },
+  {
+    "figmaNodeId": "2:690",
+    "figmaName": "WhatsApp Image 2026-06-15 at 11.07.27 (1) 1",
+    "destPath": "products/product-calcium-chloride.webp",
+    "category": "product",
+    "productName": "Calcium Chloride",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Calcium Chloride product packaging",
+    "note": "Calcium Chloride also appears as a catalog row in Water Treatment; same note as Sodium Carbonate above."
+  },
+  {
+    "figmaNodeId": "2:691",
+    "figmaName": "WhatsApp Image 2026-06-15 at 11.07.27 1",
+    "destPath": "products/product-magnesium-chloride.webp",
+    "category": "product",
+    "productName": "Magnesium Chloride",
+    "division": "animal-nutrition",
+    "recommended": true,
+    "altText": "Magnesium Chloride product packaging"
+  },
+  {
+    "figmaNodeId": "2:569",
+    "figmaName": "Clip path group (star badge, row 1 cards)",
+    "destPath": "public/assets/icons/icon-star-badge.svg",
+    "category": "static-ui",
+    "usedFor": "Recommended product card featured/best-seller badge, ROW 1 ONLY (S.B.R, Poly Aluminium Chloride, Magnesium Hydroxide, Sodium Carbonate) — CONFIRMED via full-resolution (1482x5420) rendered screenshot on 2026-08-07: rows 2-3 genuinely have no star badge, this was not an export error, the original page-analysis note was correct. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table.",
+    "altText": "Featured product star badge"
+  },
+  {
+    "figmaNodeId": "2:694",
+    "figmaName": "Vector (inside Group 39 / EXPAND)",
+    "destPath": "public/assets/icons/icon-chevron-expand.svg",
+    "category": "static-ui",
+    "usedFor": "\"Expand\" show-more toggle chevron under the Recommended grid | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table.",
+    "altText": "Expand chevron icon"
+  },
+  {
+    "figmaNodeId": "2:362",
+    "figmaName": "Clip path group (row bullet triangle, 1 of ~22 identical instances)",
+    "destPath": "public/assets/icons/icon-row-bullet.svg",
+    "category": "static-ui",
+    "usedFor": "Small right-pointing triangle bullet rendered before EVERY product name row across all 3 division tables (10 in Animal Nutrition + 8 in Water Treatment + 4 in Base Oils = 22 rows total). NEWLY FOUND during 2026-08-07 visual QA pass — was completely absent from the original asset export despite being clearly visible in the rendered design on every single row; the earlier metadata-only pass listed these ~22 small \"Clip path group\" nodes (2:362, 2:371, 2:380... etc.) without identifying what they were. Confirmed via full-resolution screenshot crop: solid navy/blue filled triangle, reused identically for every row. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table.",
+    "altText": "Product row bullet triangle"
+  },
+  {
+    "figmaNodeId": "N/A - confirmed absent",
+    "figmaName": "product card \"organic blob\" mask",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "MAJOR CORRECTION 2026-08-07: the earlier page analysis described each Recommended-grid product card as sitting inside a \"custom organic blob-shaped SVG mask (not simple border-radius)\". This is FALSE, confirmed by (1) inspecting the actual vector data behind the clip-group nodes, which resolves to a plain rectangle filled with the Entaj Gradient, and (2) rendering a full-resolution screenshot and visually inspecting multiple cards directly: every card is simply a GRADIENT ROUNDED RECTANGLE (generous corner radius, roughly 24-30px) with a smaller plain rounded-rect product photo inset within it, on a small margin. There is no organic/blob geometry anywhere in this section. Build ProductCard as a standard rounded-rect gradient container (bg: entaj-gradient, border-radius ~28px) with an inset rounded-rect <Image>, NOT a CSS clip-path/mask. This corrects both the earlier text-only page analysis and this fork's own initial suspicion before visual verification."
+  },
+  {
+    "figmaNodeId": "N/A - confirmed absent",
+    "figmaName": "\"Recommended\" label decoration",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "CORRECTION: earlier analysis mentioned \"a small star/decoration icon inline\" next to the \"Recommended\" label. Confirmed via full-resolution screenshot crop: the label is plain text only, no icon. Do not add a decoration here."
+  },
+  {
+    "figmaNodeId": "N/A - confirmed no Divisions-specific variant",
+    "figmaName": "footer",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "Confirmed via full-page screenshot: footer on Divisions matches the shared SiteFooter exactly (logo, nav, contact row, 4 social icons, tagline bar) — no page-specific footer content or decoration. Already fully resolved by the Home page asset export (see home.json)."
+  }
+]

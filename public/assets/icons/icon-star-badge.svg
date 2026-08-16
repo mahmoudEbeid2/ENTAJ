@@ -1,0 +1,33 @@
+<svg width="30" height="29" viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="DIVISIONS">
+<g id="Clip path group">
+<mask id="mask0_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="29">
+<g id="nr">
+<path id="Vector" d="M0 0H30V28.5073H0V0Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask0_0_1)">
+<g id="Group">
+<g id="Clip path group_2">
+<mask id="mask1_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="29">
+<g id="ns">
+<path id="Vector_2" d="M10.3545 9.18397L0.226562 10.7635L7.48926 17.9958L5.86328 28.1175L14.9834 23.4376L24.1064 28.1175L22.4775 17.9958L29.7432 10.7635L19.6152 9.18397L14.9834 0.0380859L10.3545 9.18397Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask1_0_1)">
+<g id="Group_2">
+<path id="Vector_3" d="M0.326172 29.8347L31.3779 28.0207L29.6406 -1.68213L-1.4082 0.131809L0.326172 29.8347Z" fill="url(#paint0_linear_0_1)"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1" x1="16.0441" y1="28.9167" x2="14.3085" y2="-0.785428" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFC400"/>
+<stop offset="1" stop-color="#FFD54F"/>
+</linearGradient>
+</defs>
+</svg>

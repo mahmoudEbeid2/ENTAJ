@@ -1,0 +1,38 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#F5F5F5"/>
+<g id="ABOUT US">
+<rect width="1440" height="4032" transform="translate(-935.25 -1413.46)" fill="white"/>
+<g id="Clip path group">
+<mask id="mask0_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<g id="hL">
+<path id="Vector" d="M0 0H23.25V23.2453H0V0Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask0_0_1)">
+<g id="Group">
+<g id="Clip path group_2">
+<mask id="mask1_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="23">
+<g id="hM">
+<path id="Vector_2" d="M0.571289 11.611C0.571289 17.8353 5.61621 22.8821 11.8447 22.8821C18.0703 22.8821 23.1182 17.8353 23.1182 11.611C23.1182 5.38374 18.0703 0.336914 11.8447 0.336914C5.61621 0.336914 0.571289 5.38374 0.571289 11.611Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask1_0_1)">
+<g id="Group_2">
+<path id="Vector_3" d="M23.1035 -0.257812L-0.0263672 0.354368L0.585938 23.4796L23.7158 22.8674L23.1035 -0.257812Z" fill="url(#paint0_linear_0_1)"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1" x1="11.5382" y1="0.047693" x2="12.1498" y2="23.1722" gradientUnits="userSpaceOnUse">
+<stop stop-color="#425CA3"/>
+<stop offset="0.25" stop-color="#435CA4"/>
+<stop offset="0.5" stop-color="#435DA4"/>
+<stop offset="0.75" stop-color="#445EA5"/>
+<stop offset="1" stop-color="#445FA5"/>
+</linearGradient>
+</defs>
+</svg>

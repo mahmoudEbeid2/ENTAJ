@@ -1,0 +1,266 @@
+[
+  {
+    "figmaNodeId": "2:3549",
+    "figmaName": "Property 1=Frame 31",
+    "destPath": "pages/home-hero-1.png",
+    "category": "hero",
+    "altText": "Molecular/DNA-strand science visual hero background",
+    "usedFor": "Home hero carousel slide 1 background. NOTE: visually confirmed via screenshot on 2026-08-07 to be a 3D molecule/DNA-strand render (science/chemistry theme), not literally a petroleum plant photo as an earlier text-only pass guessed — correcting that alt text here."
+  },
+  {
+    "figmaNodeId": "2:3553",
+    "figmaName": "Property 1=Frame 32",
+    "destPath": "pages/home-hero-2.png",
+    "category": "hero",
+    "altText": "Water treatment facility hero background",
+    "usedFor": "Home hero carousel slide 2 background (water treatment theme)"
+  },
+  {
+    "figmaNodeId": "2:3557",
+    "figmaName": "Property 1=Frame 33",
+    "destPath": "pages/home-hero-3.png",
+    "category": "hero",
+    "altText": "Animal nutrition raw materials hero background",
+    "usedFor": "Home hero carousel slide 3 background (bio/animal nutrition theme)"
+  },
+  {
+    "figmaNodeId": "2:4101",
+    "figmaName": "section 2 photo 1",
+    "destPath": "pages/home-what-sets-apart.png",
+    "category": "section",
+    "altText": "Entaj facility and operations photo",
+    "usedFor": "Home 'What Sets Us Apart' section photo (left side of Group 24)"
+  },
+  {
+    "figmaNodeId": "2:4459",
+    "figmaName": "Layer_1 (contact CTA illustration)",
+    "destPath": "pages/home-contact-cta-illustration.png",
+    "category": "illustration",
+    "altText": "Contact CTA decorative illustration",
+    "usedFor": "Home 'CONTACT US' CTA panel decorative illustration (the panel itself is a solid gradient rounded rectangle, reproduced as CSS using the entaj-gradient token, not an image)"
+  },
+  {
+    "figmaNodeId": "2:4240",
+    "figmaName": "section 3 1 1",
+    "destPath": "categories/division-animal-nutrition.png",
+    "category": "division",
+    "altText": "Animal Nutrition & Veterinary Raw Materials division banner photo",
+    "usedFor": "Home DivisionCard 1 banner photo; also usable as Divisions-page category image for Animal Nutrition"
+  },
+  {
+    "figmaNodeId": "2:4249",
+    "figmaName": "section 3 2 2",
+    "destPath": "categories/division-water-treatment.png",
+    "category": "division",
+    "altText": "Water Treatment Chemicals division banner photo",
+    "usedFor": "Home DivisionCard 2 banner photo; also usable as Divisions-page category image for Water Treatment"
+  },
+  {
+    "figmaNodeId": "2:4258",
+    "figmaName": "section 3 3 3",
+    "destPath": "categories/division-base-oils.png",
+    "category": "division",
+    "altText": "Base Oils & Petroleum Products division banner photo",
+    "usedFor": "Home DivisionCard 3 banner photo; also usable as Divisions-page category image for Base Oils"
+  },
+  {
+    "figmaNodeId": "2:4118",
+    "figmaName": "Layer_1 (value prop icon 1)",
+    "destPath": "public/assets/icons/value-prop-deep-industry-roots.svg",
+    "category": "static-ui",
+    "altText": "Deep Industry Roots icon",
+    "usedFor": "Home 'Why Entaj'/'What Sets Us Apart' value prop 1 icon. Distinct asset from About page's own icon set (settings/about-value-prop-icon-*.svg) — confirmed NOT duplicates: byte sizes and detail level differ significantly between the two pages' icon sets, so both are kept as separate real assets rather than deduplicated. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4140",
+    "figmaName": "Layer_1 (value prop icon 2)",
+    "destPath": "public/assets/icons/value-prop-integrated-infrastructure.svg",
+    "category": "static-ui",
+    "altText": "Integrated Group Infrastructure icon",
+    "usedFor": "Home value prop 2 icon | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4145",
+    "figmaName": "Layer_1 (value prop icon 3)",
+    "destPath": "public/assets/icons/value-prop-quality-compromise.svg",
+    "category": "static-ui",
+    "altText": "Quality Without Compromise icon",
+    "usedFor": "Home value prop 3 icon. Re-exported 2026-08-07 with defaultFormat=svg to get a clean flattened single-file SVG (19403 bytes) instead of the original raster PNG fallback — the underlying subtree still has 20+ sub-paths (svgAssetsTruncated on the decomposed-layers call), but the flattened whole-node SVG export is clean and complete. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4210",
+    "figmaName": "Layer_1 (value prop icon 4)",
+    "destPath": "public/assets/icons/value-prop-transparent-partnerships.svg",
+    "category": "static-ui",
+    "altText": "Transparent Partnerships icon",
+    "usedFor": "Home value prop 4 icon. Re-exported 2026-08-07 with defaultFormat=svg (14003 bytes), replacing the original raster PNG fallback. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4271 subtree (logo mark)",
+    "figmaName": "Group 4 (logo)",
+    "destPath": "settings/logo-white.svg",
+    "category": "logo",
+    "altText": "ENTAJ logo (white variant, icon + wordmark, no tagline)",
+    "usedFor": "Compact site header/nav logo, overlaid on hero photos on every page. site_settings.logo_path default value. Distinct from the full lockup-with-tagline used in the footer/About page (settings/logo-lockup-tagline.png)."
+  },
+  {
+    "figmaNodeId": "2:4489 (cp)",
+    "figmaName": "cp (footer email icon)",
+    "destPath": "public/assets/icons/icon-email.svg",
+    "category": "static-ui",
+    "altText": "Email icon",
+    "usedFor": "Footer and CTA-panel contact rows, next to info@entaj.co. Individually re-verified 2026-08-07 by scoped download_assets call + full footer screenshot cross-check. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4493 (cq)",
+    "figmaName": "cq (footer location pin icon)",
+    "destPath": "public/assets/icons/icon-location-pin.svg",
+    "category": "static-ui",
+    "altText": "Location pin icon",
+    "usedFor": "Footer and CTA-panel contact rows, next to the Amman/İzmir address. Individually re-verified 2026-08-07. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4478 (child 1 of 4, id 'ea')",
+    "figmaName": "ea (Facebook icon)",
+    "destPath": "public/assets/icons/social-facebook.svg",
+    "category": "static-ui",
+    "altText": "Facebook icon",
+    "usedFor": "Footer social row, position 1 of 4. Identity confirmed by reading the SVG path geometry (classic circular Facebook 'f' glyph) and cross-checked against the full footer screenshot — not a guess. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4478 (child 2 of 4, id 'eb')",
+    "figmaName": "eb (Instagram icon)",
+    "destPath": "public/assets/icons/social-instagram.svg",
+    "category": "static-ui",
+    "altText": "Instagram icon",
+    "usedFor": "Footer social row, position 2 of 4. Identity confirmed by SVG path geometry (camera-lens glyph) + screenshot cross-check. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4478 (child 3 of 4, id 'ec')",
+    "figmaName": "ec (LinkedIn icon)",
+    "destPath": "public/assets/icons/social-linkedin.svg",
+    "category": "static-ui",
+    "altText": "LinkedIn icon",
+    "usedFor": "Footer social row, position 3 of 4. Identity confirmed by SVG path geometry ('in' lettermark glyph) + screenshot cross-check. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4478 (child 4 of 4, id 'ed')",
+    "figmaName": "ed (YouTube icon)",
+    "destPath": "public/assets/icons/social-youtube.svg",
+    "category": "static-ui",
+    "altText": "YouTube icon",
+    "usedFor": "Footer social row, position 4 of 4. Identity confirmed by SVG path geometry (play-button triangle glyph) + screenshot cross-check. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4086",
+    "figmaName": "Vector (quality/compliance icon)",
+    "destPath": "public/assets/icons/icon-quality-compliance.svg",
+    "category": "static-ui",
+    "altText": "Quality & compliance checkmark icon",
+    "usedFor": "Home 'QUALITY & COMPLIANCE' CTA panel decorative icon (the panel itself is a solid gradient rounded rectangle, reproduced as CSS, not a photo) | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "N/A - not exported, see note",
+    "figmaName": "footer background/divider shapes (2:4466, 2:4468, 2:4469, 2:4475, 2:4477)",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "Investigated individually on 2026-08-07: these 5 nodes are the footer's two solid/gradient background rectangles (main navy panel + lighter-blue bottom credit strip) and the thin nav-divider rule, confirmed via full footer screenshot (no complex decorative art - just flat/gradient fills). Deliberately NOT saved as image assets: reproduce as CSS using the existing entaj-blue / entaj-gradient design tokens (background-color/gradient + border-bottom), which is more correct than shipping solid-color shapes as SVG/PNG files. This replaces the 14 unidentified 'footer-graphic-XX.svg' placeholder files from the first export pass, which have been deleted."
+  },
+  {
+    "figmaNodeId": "N/A - verified absent (re-confirmed 2026-08-08 with full metadata + screenshot)",
+    "figmaName": "'Markets We Served' world map graphic",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "CORRECTION to the earlier page survey, RE-VERIFIED 2026-08-08: obtained the complete (previously-truncated) Figma metadata for the whole MAIN PAGE node and confirmed no vector/image node exists between the 'MARKETS WE SERVE' heading (2:4434) and the 4 RegionBlock frames (2:4437/4450/4453/4456) — genuinely no map graphic anywhere in the file. Build this section as the 4 RegionBlocks (heading + country list) only, no map illustration."
+  },
+  {
+    "figmaNodeId": "2:4027 (sibling of clip-mask 2:4024)",
+    "figmaName": "Stat icon 1 - flag (Country served)",
+    "destPath": "public/assets/icons/stat-icon-country.svg",
+    "category": "static-ui",
+    "altText": "Flag icon",
+    "usedFor": "CORRECTION 2026-08-08, overturns the earlier 'stat block icons N/A - verified absent' entry: full (untruncated) metadata sweep found 4 icon-shaped groups positioned directly above the 4 stat numbers, x-aligned to each column, that a prior narrower metadata query had missed entirely. Visually confirmed via get_screenshot as a flag icon, matching '12+ Country served'. The previous 'no stat icons' finding was WRONG and is retracted by this entry and the 3 below. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:3942",
+    "figmaName": "Stat icon 2 - person with stars (Years of experience)",
+    "destPath": "public/assets/icons/stat-icon-experience.svg",
+    "category": "static-ui",
+    "altText": "Person with stars icon",
+    "usedFor": "Stat icon above '20+ Years of experience'. Re-exported with defaultFormat=svg for a clean flattened file (31002 bytes) since the decomposed sub-layer call hit the 20-asset truncation cap. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:3617",
+    "figmaName": "Stat icon 3 - warehouse/factory with map pin (Raw materials)",
+    "destPath": "public/assets/icons/stat-icon-materials.svg",
+    "category": "static-ui",
+    "altText": "Warehouse with location pin icon",
+    "usedFor": "Stat icon above '100+ Raw materials'. Re-exported with defaultFormat=svg (64654 bytes), same truncation-cap fix as icon 2. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:3562",
+    "figmaName": "Stat icon 4 - ISO certification seal",
+    "destPath": "public/assets/icons/stat-icon-certified.svg",
+    "category": "static-ui",
+    "altText": "ISO certification badge icon",
+    "usedFor": "Stat icon above 'ISO Certified'. Re-exported with defaultFormat=svg (22461 bytes). Visually unambiguous — a gear-toothed circular seal with 'ISO' lettering inside. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4321 (\"gL\", one of several overlapping clip-path-groups at x=380 y=6306)",
+    "figmaName": "Why-Entaj intro photo - typewriter with 'WHY ENTAJ' typed on paper",
+    "destPath": "pages/home-why-entaj-typewriter.png",
+    "category": "section",
+    "altText": "Vintage typewriter with a hand feeding in paper reading WHY ENTAJ",
+    "usedFor": "NEWLY FOUND 2026-08-08: a real content photo sitting in the 'Why Entaj' section header, completely absent from every prior pass (both the original export and the first-round metadata survey missed it — it has no live-text/simple-name node, it's buried among several overlapping same-position clip-path-groups of different widths, e.g. sibling nodes 2:4294/4303/4312 are NOT the photo, they're a plain entaj-gradient background panel at the same coordinates). This photo sits inset within that gradient panel. Confirmed via direct get_screenshot render, not guessed."
+  },
+  {
+    "figmaNodeId": "2:4058 (\"Rectangle\", inside Clip path group 2:4050)",
+    "figmaName": "About-Us summary photo - ENTAJ HQ building with signage and Jordan flag",
+    "destPath": "pages/home-about-hq-building.png",
+    "category": "section",
+    "altText": "ENTAJ corporate building with rooftop signage and Jordan flag",
+    "usedFor": "NEWLY FOUND 2026-08-08: a real corporate-building photo in the Home 'About Us summary' block, missed by every prior pass for the same reason as the typewriter photo above (nested inside clip-path-group wrapper naming that gave no hint of real photo content). Confirmed via direct get_screenshot render."
+  },
+  {
+    "figmaNodeId": "2:4042 (\"Vector\", x=94 y=1217, 314x189 - within the About-Us summary block)",
+    "figmaName": "About-Us summary decorative blob",
+    "destPath": "public/assets/illustrations/home-about-blob-shape.png",
+    "category": "static-ui",
+    "altText": "Decorative entaj-blue gradient blob/pill shape near the About-Us summary text",
+    "usedFor": "CORRECTION 2026-08-08: a killed-then-resumed QA pass flagged node 2:4042 as 'renders blank in every attempt, inconclusive, low-priority' since the resumed attempt's re-export came back empty. A full-metadata cross-reference found the FIRST (killed) attempt had already produced a successful export of this exact node before being interrupted - this file, showing a visible entaj-blue gradient blob/pill shape - left undocumented on disk until this cleanup pass. Status corrected from 'inconclusive' to confirmed-present; use this file as the decorative element near the 'ABOUT US' eyebrow/heading text. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:4282 (\"gk\"/\"gl\" clip-path-group)",
+    "figmaName": "Why-Entaj gradient blob decoration",
+    "destPath": "public/assets/illustrations/decor-blob-why-entaj.svg",
+    "category": "static-ui",
+    "altText": "Organic gradient blob shape, navy to light blue",
+    "usedFor": "NEWLY FOUND 2026-08-08: a genuine organic/blob-shaped decorative gradient element (unlike the Divisions page, where a similar-sounding claim turned out to be false — this one IS real, confirmed visually) sitting near the Why-Entaj intro photo. Positioned decoratively, likely behind/beside the typewriter photo. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:3561",
+    "figmaName": "Dashed rounded-rectangle border (About-Us summary area)",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "NEWLY FOUND 2026-08-08, investigated and classified: a simple dashed-outline rounded-rectangle border decoration near the About-Us summary text. Confirmed visually simple enough to reproduce as CSS (border-style: dashed + border-radius) rather than exporting as an image."
+  },
+  {
+    "figmaNodeId": "2:4064",
+    "figmaName": "Solid navy pill/rounded-rectangle (Contact CTA section)",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "NEWLY FOUND 2026-08-08: a solid entaj-blue rounded-rectangle (961x61) in the Contact CTA panel, almost certainly a button background. Reproduce as CSS using the entaj-blue token, not an image."
+  },
+  {
+    "figmaNodeId": "2:4065",
+    "figmaName": "Contact CTA button label (on the navy pill 2:4064)",
+    "destPath": null,
+    "category": "resolved-by-user-decision",
+    "altText": null,
+    "usedFor": "RESOLVED 2026-08-08 by explicit user decision: a small (102x15) white-filled group sits on top of the navy pill (2:4064) inside the Contact CTA panel, almost certainly this button's label, but it rendered invisible in every isolated export/screenshot attempt and is not a live text node, so its exact copy could not be read from the Figma file. Flagged to the user rather than guessed; user approved the inferred default 'Contact Us' (matches the section's CTA pattern and the site nav label). Use this as the button text; not a placeholder, this is the confirmed final copy."
+  }
+]

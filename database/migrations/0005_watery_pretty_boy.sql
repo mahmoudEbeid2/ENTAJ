@@ -1,0 +1,1 @@
+ALTER TABLE `why_us_features` ADD `image_path` varchar(500);

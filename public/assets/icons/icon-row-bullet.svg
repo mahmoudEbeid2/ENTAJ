@@ -1,0 +1,41 @@
+<svg width="15" height="18" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="15" height="18" fill="#F5F5F5"/>
+<g id="DIVISIONS">
+<rect width="1440" height="5418" transform="translate(-419.25 -2676)" fill="white"/>
+<g id="Clip path group">
+<mask id="mask0_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="15" height="18">
+<g id="md">
+<path id="Vector" d="M0 0H15V17.2544H0V0Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask0_0_1)">
+<g id="Group">
+<g id="Clip path group_2">
+<mask id="mask1_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="15" height="18">
+<g id="me">
+<path id="Vector_2" d="M0.132812 17.1048L14.5059 8.8029L0.132812 0.500977V17.1048Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask1_0_1)">
+<g id="Group_2">
+<path id="Vector_3" d="M0.134766 0.254883L-0.152344 17.099L14.502 17.3481L14.7891 0.5069L0.134766 0.254883Z" fill="url(#paint0_linear_0_1)"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1" x1="-0.0105186" y1="8.80007" x2="14.6425" y2="9.05018" gradientUnits="userSpaceOnUse">
+<stop stop-color="#70A6CF"/>
+<stop offset="0.125" stop-color="#70A6CF"/>
+<stop offset="0.25" stop-color="#70A7D0"/>
+<stop offset="0.375" stop-color="#71A8D0"/>
+<stop offset="0.5" stop-color="#71A8D0"/>
+<stop offset="0.625" stop-color="#72A9D1"/>
+<stop offset="0.75" stop-color="#72AAD1"/>
+<stop offset="1" stop-color="#73ABD2"/>
+</linearGradient>
+</defs>
+</svg>

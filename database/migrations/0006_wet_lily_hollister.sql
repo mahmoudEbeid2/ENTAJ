@@ -1,0 +1,1 @@
+ALTER TABLE `site_settings` ADD `footer_logo_path` varchar(500);

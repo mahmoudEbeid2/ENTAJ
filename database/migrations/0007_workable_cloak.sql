@@ -1,0 +1,1 @@
+ALTER TABLE `products` ADD `recommended_label` varchar(100);

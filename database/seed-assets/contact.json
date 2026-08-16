@@ -1,0 +1,82 @@
+[
+  {
+    "figmaNodeId": "2:17",
+    "figmaName": "Clip path group (Contact hero background)",
+    "destPath": "pages/contact-hero.webp",
+    "category": "hero",
+    "altText": "Sky and clouds background with decorative rotary phone illustration",
+    "usedFor": "Contact Us page hero banner background"
+  },
+  {
+    "figmaNodeId": "2:139",
+    "figmaName": "Group 30 (Jordan flag)",
+    "destPath": "public/assets/icons/flag-jordan.svg",
+    "category": "static-ui",
+    "altText": "Flag of Jordan",
+    "usedFor": "Contact Us page — Office panel, Amman Jordan location | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:187",
+    "figmaName": "Clip path group (Turkey flag)",
+    "destPath": "public/assets/icons/flag-turkey.svg",
+    "category": "static-ui",
+    "altText": "Flag of Turkey",
+    "usedFor": "Contact Us page — Office panel, İzmir Free Trade Zone Turkey location | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:86",
+    "figmaName": "Group 32 (circled email icon)",
+    "destPath": "public/assets/icons/icon-email-circled.svg",
+    "category": "static-ui",
+    "altText": "Email icon in circular outline badge",
+    "usedFor": "Contact Us page — Contact info panel, E-Mail row. Found during 2026-08-07 visual verification pass (zoomed crop of rendered screenshot) — distinct larger circle-badge icon style, NOT the same as the small flat settings/icon-email.svg used in the footer. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:89",
+    "figmaName": "Group 33 (circled website/globe icon)",
+    "destPath": "public/assets/icons/icon-website-circled.svg",
+    "category": "static-ui",
+    "altText": "Globe icon in circular outline badge",
+    "usedFor": "Contact Us page — Contact info panel, Website row. Found during 2026-08-07 visual verification pass; no globe icon existed anywhere else in the prior export. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:81",
+    "figmaName": "Group 31 (circled location pin icon)",
+    "destPath": "public/assets/icons/icon-location-circled.svg",
+    "category": "static-ui",
+    "altText": "Location pin icon in circular outline badge",
+    "usedFor": "Contact Us page — Office panel heading icon, above 'Office' label. Found during 2026-08-07 visual verification pass — distinct larger circle-badge style, NOT the same as the small flat settings/icon-location-pin.svg used in the footer. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:60 / 2:31 (verified, not re-exported)",
+    "figmaName": "Contact-info blob panel backgrounds",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "2026-08-07 visual verification (zoomed crop of rendered screenshot, not metadata alone): the two 'blob' panels (Contact panel, Office panel) are flat solid-fill shapes with asymmetric/organic corner radii (large rounded outer corners, one flowing tail edge) and NO photographic texture, gradient shading, drop shadow, or pattern. Confirmed CSS-reproducible via custom border-radius per corner (or a clip-path for exact fidelity) + flat background-color (#ffffff for Contact panel, #f2f2f2 for Office panel) — correctly not exported as an image."
+  },
+  {
+    "figmaNodeId": "2:80, 2:61 (verified, not re-exported)",
+    "figmaName": "Divider lines flanking the Office icon / between office locations",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "2026-08-07 visual verification: thin horizontal line (2:80, ~582px wide, effectively 0 height) flanking the Office pin icon, and a thin vertical line (2:61, ~1px wide x 53px tall) between the two office location entries. Both are simple straight strokes — confirmed CSS-reproducible (border-top/border-left), not image assets."
+  },
+  {
+    "figmaNodeId": "2:200 (verified, not re-exported)",
+    "figmaName": "'CONTACT US' hero title text treatment",
+    "destPath": null,
+    "category": "styling-note",
+    "altText": null,
+    "usedFor": "2026-08-07 visual verification: zoomed crop confirms the hero title is rendered as OUTLINE/STROKE-ONLY text (white stroke, transparent fill — the cloud background shows through the letterforms), not a solid white fill as assumed elsewhere on other pages' hero titles. Reproduce with a text-stroke effect (e.g. -webkit-text-stroke or an SVG text stroke), not solid color. Font remains Saira SemiExpanded Thin. This is a styling detail for the PageHero component, not a missing image asset."
+  },
+  {
+    "figmaNodeId": "2:17 (verified, not re-exported)",
+    "figmaName": "Contact hero composition completeness check",
+    "destPath": "pages/contact-hero.webp",
+    "category": "verified-match",
+    "altText": null,
+    "usedFor": "2026-08-07 visual verification: confirmed storage/pages/contact-hero.webp already contains the FULL flattened hero composition (sky, clouds, floating cliff island with tree/path, and the rotary phone + abstract logo-mark illustration) as a single background image — matches the rendered Figma screenshot exactly. No separate phone-illustration layer needs to be exported or composited in code."
+  }
+]

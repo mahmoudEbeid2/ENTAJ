@@ -1,0 +1,62 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1786141533675,
+      "tag": "0000_cold_pretty_boy",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786144198239,
+      "tag": "0001_cold_demogoblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786172915072,
+      "tag": "0002_mushy_puma",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1786173945091,
+      "tag": "0003_true_nextwave",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1786186789429,
+      "tag": "0004_exotic_the_fallen",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1786215397678,
+      "tag": "0005_watery_pretty_boy",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1786470580267,
+      "tag": "0006_wet_lily_hollister",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1786475200366,
+      "tag": "0007_workable_cloak",
+      "breakpoints": true
+    }
+  ]
+}

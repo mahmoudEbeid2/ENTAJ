@@ -1,0 +1,115 @@
+[
+  {
+    "figmaNodeId": "2:980",
+    "figmaName": "Group (hero)",
+    "destPath": "pages/about-hero.png",
+    "category": "hero",
+    "dimensions": "3040x2003",
+    "altText": "ENTAJ About Us page hero background",
+    "usedFor": "About Us page hero section background photo. RE-VERIFIED 2026-08-08 via full-resolution screenshot: the 'CONTACT US' title is a separate thin stroke-outline text layer sitting ON TOP of a clean keyboard/grass photo (title is NOT baked into the photo pixels) — confirmed safe to override with live 'ABOUT US' text per the approved fix, no re-export needed."
+  },
+  {
+    "figmaNodeId": "2:980",
+    "figmaName": "Group (hero) - secondary raw image",
+    "destPath": "pages/about-hero-inset.png",
+    "category": "hero",
+    "dimensions": "380x251",
+    "altText": "Branded keyboard key / cursor icon inset on About hero",
+    "usedFor": "Small inset/overlay graphic within the About hero photo (the branded 'ENTAJ' key + cursor-hand detail)"
+  },
+  {
+    "figmaNodeId": "2:2990/2:3022 (Layer_1)",
+    "figmaName": "CTA card phone illustration",
+    "destPath": "pages/about-cta-phone.png",
+    "category": "section",
+    "dimensions": "1123x1402",
+    "altText": "Retro telephone handset illustration",
+    "usedFor": "About page 'Contact CTA' card decorative phone illustration. RE-VERIFIED 2026-08-08 via get_metadata on node 2:2990: the card itself is a plain 'rounded-rectangle' (node 2:2991, 'Rectangle 12') — confirmed NOT a blob/organic shape, matches the same pattern already found on Divisions. The phone illustration is clipped by a plain rounded-rect mask (node 2:3023/3024), not an organic mask. Safe to build as a simple CSS rounded-rectangle card with a subtle box-shadow."
+  },
+  {
+    "figmaNodeId": "2:2990",
+    "figmaName": "CTA card phone illustration (secondary)",
+    "destPath": "pages/about-cta-phone-alt.png",
+    "category": "section",
+    "dimensions": "281x351",
+    "altText": "Retro telephone handset illustration (alternate crop)",
+    "usedFor": "Alternate/secondary export of the CTA card phone illustration — kept in case the primary crop doesn't fit; not required if about-cta-phone.png is sufficient"
+  },
+  {
+    "figmaNodeId": "2:985",
+    "figmaName": "Group 3 (logo lockup, mostly vectorized 'POWERING INDUSTRY' text)",
+    "destPath": "settings/logo-lockup-tagline.png",
+    "category": "icon",
+    "dimensions": "454x149",
+    "altText": "ENTAJ brand lockup with Raw Materials / Powering Industry tagline",
+    "usedFor": "About/Contact page intro section decorative brand mark on a light background (site_settings.logo_lockup_path default value). The compact header-nav logo (icon + \"ENTAJ\" wordmark only, no tagline) is the separate settings/logo-white.svg asset. NOTE: this node's subtree contains 20+ tiny vector paths (Figma reported svgAssetsTruncated=true) that are almost certainly individually-outlined letterforms for the vertical 'POWERING INDUSTRY' tag text, not real icon assets — used the single flattened whole-node export instead of extracting fragments. If pixel-perfect vector quality is later needed, re-export node 2:985 as SVG. CORRECTION 2026-08-11: the 2026-08-07 note claiming this same blue-on-transparent asset is reused verbatim in the footer was wrong — never verified against the footer's own Figma node (2:3348). The footer (navy background) actually needs an all-white rendering of this same lockup; that is a separate asset, settings/logo-lockup-tagline-white.png (footerLogoPath), cropped/chroma-keyed from the real footer node's screenshot. See [[project-entaj-footer-fix]]."
+  },
+  {
+    "figmaNodeId": "2:3151",
+    "figmaName": "Clip path group (value prop icon 1)",
+    "destPath": "public/assets/icons/about-value-prop-icon-1.svg",
+    "category": "static-ui",
+    "viewBox": "0 0 24 24",
+    "altText": "Deep industry roots icon",
+    "usedFor": "About page 'What Sets Us Apart' value prop 1 icon (Deep industry roots). BUG FOUND AND FIXED 2026-08-08: the file previously at this path actually contained icon 4's content (wrong viewBox 76x54, a root/branch swirl shape) due to a mislabeling error in the original export pass — confirmed via Figma's own get_screenshot render of node 2:3151 showing a 24x24 icon, not 76x54. Re-exported directly from node 2:3151 with defaultFormat=svg; now correctly viewBox 24x24 and visually confirmed (via full-page screenshot) to show a small root/branch line-art icon, thematically matching 'Deep industry roots'. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "2:3193;2:3202;2:3211;2:3220;2:3229;2:3238;2:3247",
+    "figmaName": "value prop icon 2 (7 ungrouped clip-path fragments, no wrapping frame)",
+    "destPath": "public/assets/icons/about-value-prop-icon-2.png",
+    "category": "static-ui",
+    "altText": "Integrated group infrastructure icon",
+    "usedFor": "About page 'What Sets Us Apart' value prop 2 icon (Integrated group infrastructure). CORRECTED 2026-08-11: the 2026-08-08 fix was itself wrong — node 2:3160 (a StatTimeline dot marker at y=1564, unrelated to the value-props list at y~2200+) had been mislabeled as this icon, producing a plain solid globe instead of Figma's actual network/node globe glyph. The real icon has no single Figma node (7 flat ungrouped 'Clip path group'/vector fragments directly under the page root, bbox x:145.5-202,y:2215.8-2266), so it was captured as a precise pixel crop from a verified 1:1-scale get_screenshot render of the full About page (not hand-drawn/regenerated) and saved as PNG instead of SVG."
+  },
+  {
+    "figmaNodeId": "2:3256;2:3265;2:3266;2:3275;2:3276;2:3285",
+    "figmaName": "value prop icon 3 (6 ungrouped clip-path/vector fragments, no wrapping frame)",
+    "destPath": "public/assets/icons/about-value-prop-icon-3.png",
+    "category": "static-ui",
+    "altText": "Quality without compromise icon",
+    "usedFor": "About page 'What Sets Us Apart' value prop 3 icon (Quality without compromise). CORRECTED 2026-08-11: the 2026-08-08 fix was itself wrong — node 2:3169 (a StatTimeline dot marker at y=1720, unrelated to the value-props list) had been mislabeled as this icon, producing a blank scalloped outline with no checkmark. The real icon has no single Figma node (6 flat ungrouped fragments directly under the page root, bbox x:148.5-198,y:2416-2466), so it was captured as a precise pixel crop from a verified 1:1-scale get_screenshot render of the full About page (not hand-drawn/regenerated) and saved as PNG instead of SVG."
+  },
+  {
+    "figmaNodeId": "2:3184",
+    "figmaName": "Clip path group (value prop icon 4)",
+    "destPath": "public/assets/icons/about-value-prop-icon-4.svg",
+    "category": "static-ui",
+    "viewBox": "0 0 76 54",
+    "altText": "Transparent partnerships icon",
+    "usedFor": "About page 'What Sets Us Apart' value prop 4 icon (Transparent partnerships). Re-exported 2026-08-08 alongside the sibling fixes for consistency (was already correct: viewBox 76x54 genuinely matches this node's native size). Visually confirmed distinct from icons 1-3. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "N/A - composite, no single vector node found",
+    "figmaName": "Stat timeline connector graphic (2012 Founded / 2 Countries with facilities / 20+ Markets reached / 3 Core divisions)",
+    "destPath": "../reference/about-full-reference.png",
+    "category": "reference-not-shipped",
+    "altText": "Full-page reference screenshot of the About page at native 1440x4032 resolution",
+    "usedFor": "SUPERSEDED 2026-08-08: a killed-then-resumed QA pass initially concluded no clean vector node existed for this graphic and recommended a hand-built CSS/SVG reproduction. A later full-metadata sweep found the FIRST (killed) attempt had already exported the real connector-line and dot SVGs before being interrupted, sitting undocumented on disk - see the two entries below which supersede this recommendation. Kept this reference screenshot only as a build-time position reference (never shipped - see storage split policy), relocated from storage/pages/ to database/seed-assets/reference/about-full-reference.png."
+  },
+  {
+    "figmaNodeId": "N/A (killed-attempt export, node not re-identified, geometry matches description)",
+    "figmaName": "Stat timeline connector line (zig-zag path)",
+    "destPath": "public/assets/illustrations/about-stats-timeline.svg",
+    "category": "static-ui",
+    "viewBox": "0 0 172 433",
+    "altText": "Zig-zag connector line linking the 4 stat pairs on the About page timeline",
+    "usedFor": "RECOVERED 2026-08-08: found undocumented on disk from the killed first QA attempt (predates the resumed attempt's 'no clean node found' conclusion). Verified by reading the raw SVG content: single stroked path, viewBox 172x433, geometry matches the diagonal zig-zag connector described in every pass of this section. Use this instead of hand-building the connector. NOTE: exported with stroke=\"black\" - recolor to entaj-blue (#2c388e) in the component; this is almost certainly a default-black export artifact, not the true design color. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "N/A (killed-attempt export, node not re-identified, geometry matches description)",
+    "figmaName": "Stat timeline connector node dot",
+    "destPath": "public/assets/illustrations/about-stats-timeline-dot.svg",
+    "category": "static-ui",
+    "viewBox": "0 0 24 24",
+    "altText": "Small filled circle marking each stat on the About page timeline",
+    "usedFor": "RECOVERED 2026-08-08: found undocumented on disk alongside about-stats-timeline.svg, same origin. Verified by reading the raw SVG content: 24x24 circle with an entaj-blue linear gradient fill (#425CA3 to #445FA5), matches 'small filled circle nodes, entaj-blue color' from every pass's description. Use one instance of this dot at each of the 4 stat positions along the timeline line. | RELOCATED 2026-08-08: reclassified as static UI (not CMS/DB content) per the storage-vs-public split policy, moved out of storage/ into public/assets/ and updated destPath accordingly; this asset is imported directly in component code, not seeded into any DB table."
+  },
+  {
+    "figmaNodeId": "N/A - confirmed absent",
+    "figmaName": "Bullet markers on 'What Sets Us Apart' list items",
+    "destPath": null,
+    "category": "not-an-asset",
+    "altText": null,
+    "usedFor": "CHECKED 2026-08-08 per the Divisions-page lesson (missing row-bullet icon there): visually confirmed via full-page screenshot that About's 'What Sets Us Apart' list uses plain numbered labels (01/02/03/04) directly above each title, no separate bullet/marker icon — nothing missing here, unlike Divisions."
+  }
+]

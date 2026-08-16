@@ -1,0 +1,1 @@
+ALTER TABLE `divisions` ADD `short_name` varchar(100);
