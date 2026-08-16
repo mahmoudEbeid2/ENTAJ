@@ -37,7 +37,7 @@ export function HeroCarousel({
   }, [images.length]);
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-dvh min-h-[560px] overflow-hidden">
       {images.map((image, index) => (
         <Image
           key={image.id}
@@ -59,7 +59,7 @@ export function HeroCarousel({
             textAlign: "center",
             fontFamily: '"Saira SemiExpanded", var(--font-saira)',
             fontStretch: "112.5%",
-            fontSize: "48px",
+            fontSize: "clamp(28px, 8vw, 48px)",
             fontStyle: "normal",
             fontWeight: 300,
             lineHeight: "normal",
@@ -75,7 +75,7 @@ export function HeroCarousel({
               color: "#FFF",
               textAlign: "center",
               fontFamily: "var(--font-saira)",
-              fontSize: "20px",
+              fontSize: "clamp(15px, 4vw, 20px)",
               fontStyle: "normal",
               fontWeight: 250,
               lineHeight: "normal",
@@ -97,12 +97,12 @@ export function HeroCarousel({
             {ctaSecondaryLabel && ctaSecondaryHref ? (
               <Button
                 render={<Link href={ctaSecondaryHref} />}
-                className="inline-flex h-[61px] w-[310px] items-center justify-center gap-[10px] rounded-[34px] bg-white p-[10px] shadow-none transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/80 hover:shadow-lg"
+                className="inline-flex h-[61px] w-[min(310px,100%)] items-center justify-center gap-[10px] rounded-[34px] bg-white p-[10px] shadow-none transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/80 hover:shadow-lg"
                 style={{
                   color: "#374C86",
                   textAlign: "center",
                   fontFamily: "var(--font-saira)",
-                  fontSize: "26px",
+                  fontSize: "clamp(18px, 5vw, 26px)",
                   fontStyle: "normal",
                   fontWeight: 300,
                   lineHeight: "normal",
@@ -114,7 +114,7 @@ export function HeroCarousel({
             {ctaPrimaryLabel && ctaPrimaryHref ? (
               <Button
                 render={<Link href={ctaPrimaryHref} />}
-                className="h-[61px] w-[266px] transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg"
+                className="h-[61px] w-[min(266px,100%)] transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg"
                 style={{
                   display: "inline-flex",
                   padding: "10px",
@@ -126,7 +126,7 @@ export function HeroCarousel({
                   color: "#FFF",
                   textAlign: "center",
                   fontFamily: "var(--font-saira)",
-                  fontSize: "26px",
+                  fontSize: "clamp(18px, 5vw, 26px)",
                   fontStyle: "normal",
                   fontWeight: 300,
                   lineHeight: "normal",
