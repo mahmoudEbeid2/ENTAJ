@@ -1,48 +1,13 @@
+# Production compose file for the 191.218.161.132 host.
+#
+# This server is shared with another project ("mostanad"), which already
+# runs a Traefik instance bound to host ports 80/443 (see
+# /root/mostanad/docker-compose.prod.yml on that host — container name
+# "traefik", certResolver "myresolver", TLS-ALPN challenge, shared ingress
+# network "traefik_webgateway"). We do NOT run a second Traefik — we join
+# that existing network and let the existing Traefik route to us purely via
+# Docker labels, exactly like mostanad's own "mostanad-app" service does.
 services:
-  traefik:
-    image: traefik:v3.5
-    container_name: entaj-traefik
-    restart: unless-stopped
-    environment:
-      # Pins the Docker API version Traefik's client negotiates, instead of
-      # relying on auto-negotiation against whatever the host's Docker Engine
-      # reports — protects against the docker provider failing to start on
-      # engine versions newer than the one Traefik shipped against.
-      DOCKER_API_VERSION: "1.44"
-    command:
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=entaj-proxy
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.web.http.redirections.entrypoint.to=websecure
-      - --entrypoints.web.http.redirections.entrypoint.scheme=https
-      - --entrypoints.web.http.redirections.entrypoint.permanent=true
-      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
-      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
-      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
-      - --api.dashboard=false
-      - --ping=true
-      - --log.level=INFO
-      - --accesslog=true
-    ports:
-      # Only Traefik touches the host network — the app and db are reachable
-      # only through the internal entaj-proxy/entaj-internal Docker networks.
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - entaj-traefik-certs:/letsencrypt
-    networks:
-      - entaj-proxy
-    healthcheck:
-      test: ["CMD", "traefik", "healthcheck", "--ping"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
   app:
     build:
       context: .
@@ -62,13 +27,13 @@ services:
       NODE_ENV: production
       PORT: "3000"
       NEXT_PUBLIC_SITE_URL: https://entaj.co
-    # No `ports:` mapping on purpose — Traefik is the only public entry
-    # point (requirement: app must not be publicly exposed directly).
+    # No `ports:` mapping on purpose — the shared Traefik is the only public
+    # entry point (requirement: app must not be publicly exposed directly).
     volumes:
       - ./storage:/app/storage
     networks:
-      - entaj-proxy    # so Traefik can reach it
-      - entaj-internal # so it can reach mysql
+      - traefik_webgateway # shared ingress network -> reachable by the existing Traefik
+      - entaj-internal      # private network -> reachable by our own mysql only
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
@@ -77,12 +42,11 @@ services:
       start_period: 180s
     labels:
       - traefik.enable=true
-      - traefik.docker.network=entaj-proxy
+      - traefik.docker.network=traefik_webgateway
       # Single router for both hostnames, single cert covering both via SANs.
       - traefik.http.routers.entaj-web.rule=Host(`entaj.co`) || Host(`www.entaj.co`)
       - traefik.http.routers.entaj-web.entrypoints=websecure
-      - traefik.http.routers.entaj-web.tls=true
-      - traefik.http.routers.entaj-web.tls.certresolver=letsencrypt
+      - traefik.http.routers.entaj-web.tls.certresolver=myresolver
       - traefik.http.routers.entaj-web.tls.domains[0].main=entaj.co
       - traefik.http.routers.entaj-web.tls.domains[0].sans=www.entaj.co
       - traefik.http.services.entaj-web.loadbalancer.server.port=3000
@@ -102,8 +66,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    # No `ports:` mapping — not reachable from outside the host at all in
-    # production (dev's 127.0.0.1:3306 convenience mapping is dropped here).
+    # No `ports:` mapping — not reachable from outside the container network
+    # at all, and not on the shared traefik_webgateway network either.
     volumes:
       - entaj-mysql-data:/var/lib/mysql
     networks:
@@ -116,12 +80,10 @@ services:
       start_period: 20s
 
 networks:
-  entaj-proxy:
-    name: entaj-proxy
+  traefik_webgateway:
+    external: true # owned by the mostanad project's compose file, not us
   entaj-internal:
-    name: entaj-internal
-    internal: true
+    internal: true # no internet egress; mysql only needs to talk to app
 
 volumes:
   entaj-mysql-data:
-  entaj-traefik-certs:
