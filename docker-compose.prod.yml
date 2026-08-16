@@ -1,0 +1,127 @@
+services:
+  traefik:
+    image: traefik:v3.5
+    container_name: entaj-traefik
+    restart: unless-stopped
+    environment:
+      # Pins the Docker API version Traefik's client negotiates, instead of
+      # relying on auto-negotiation against whatever the host's Docker Engine
+      # reports — protects against the docker provider failing to start on
+      # engine versions newer than the one Traefik shipped against.
+      DOCKER_API_VERSION: "1.44"
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=entaj-proxy
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+      - --api.dashboard=false
+      - --ping=true
+      - --log.level=INFO
+      - --accesslog=true
+    ports:
+      # Only Traefik touches the host network — the app and db are reachable
+      # only through the internal entaj-proxy/entaj-internal Docker networks.
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - entaj-traefik-certs:/letsencrypt
+    networks:
+      - entaj-proxy
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: entaj-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    # Pulls in JWT_SECRET, ADMIN_EMAIL/PASSWORD, SMTP, STORAGE_*, etc. from
+    # .env; DATABASE_URL/NODE_ENV/PORT below override with container-network
+    # values so the app talks to "mysql" by Docker service name.
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+      NODE_ENV: production
+      PORT: "3000"
+      NEXT_PUBLIC_SITE_URL: https://entaj.co
+    # No `ports:` mapping on purpose — Traefik is the only public entry
+    # point (requirement: app must not be publicly exposed directly).
+    volumes:
+      - ./storage:/app/storage
+    networks:
+      - entaj-proxy    # so Traefik can reach it
+      - entaj-internal # so it can reach mysql
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 180s
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=entaj-proxy
+      # Single router for both hostnames, single cert covering both via SANs.
+      - traefik.http.routers.entaj-web.rule=Host(`entaj.co`) || Host(`www.entaj.co`)
+      - traefik.http.routers.entaj-web.entrypoints=websecure
+      - traefik.http.routers.entaj-web.tls=true
+      - traefik.http.routers.entaj-web.tls.certresolver=letsencrypt
+      - traefik.http.routers.entaj-web.tls.domains[0].main=entaj.co
+      - traefik.http.routers.entaj-web.tls.domains[0].sans=www.entaj.co
+      - traefik.http.services.entaj-web.loadbalancer.server.port=3000
+      # Canonicalize www -> apex (NEXT_PUBLIC_SITE_URL is the apex, and this
+      # keeps the JWT-cookie admin session on a single consistent host).
+      - traefik.http.routers.entaj-web.middlewares=entaj-www-redirect
+      - traefik.http.middlewares.entaj-www-redirect.redirectregex.regex=^https://www\.entaj\.co/(.*)
+      - traefik.http.middlewares.entaj-www-redirect.redirectregex.replacement=https://entaj.co/$${1}
+      - traefik.http.middlewares.entaj-www-redirect.redirectregex.permanent=true
+
+  mysql:
+    image: mysql:8.4
+    container_name: entaj-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    # No `ports:` mapping — not reachable from outside the host at all in
+    # production (dev's 127.0.0.1:3306 convenience mapping is dropped here).
+    volumes:
+      - entaj-mysql-data:/var/lib/mysql
+    networks:
+      - entaj-internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+networks:
+  entaj-proxy:
+    name: entaj-proxy
+  entaj-internal:
+    name: entaj-internal
+    internal: true
+
+volumes:
+  entaj-mysql-data:
+  entaj-traefik-certs:
