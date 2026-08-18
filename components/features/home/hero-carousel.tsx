@@ -37,7 +37,7 @@ export function HeroCarousel({
   }, [images.length]);
 
   return (
-    <div className="relative h-dvh min-h-[560px] overflow-hidden">
+    <div className="relative flex min-h-[max(560px,100dvh)] flex-col overflow-hidden">
       {images.map((image, index) => (
         <Image
           key={image.id}
@@ -51,7 +51,7 @@ export function HeroCarousel({
         />
       ))}
 
-      <div className="relative flex h-full max-w-[1280px] flex-col items-center justify-center gap-6 px-6 mx-auto text-center lg:justify-start lg:pt-[342.62px] lg:px-10">
+      <div className="relative flex w-full flex-1 max-w-[1280px] flex-col items-center justify-center gap-6 px-6 mx-auto text-center lg:justify-start lg:pt-[342.62px] lg:px-10">
         <h1
           className="animate-in fade-in slide-in-from-bottom-4 animation-fill-mode-both mx-auto w-full max-w-[1116px] duration-700 ease-out"
           style={{
@@ -93,11 +93,11 @@ export function HeroCarousel({
           </p>
         ) : null}
         {(ctaPrimaryLabel || ctaSecondaryLabel) && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 animation-fill-mode-both animation-delay-300 flex flex-wrap justify-center gap-4 pt-2 duration-700 ease-out">
+          <div className="animate-in fade-in slide-in-from-bottom-4 animation-fill-mode-both animation-delay-300 flex flex-wrap justify-center gap-3 pt-2 duration-700 ease-out sm:gap-4">
             {ctaSecondaryLabel && ctaSecondaryHref ? (
               <Button
                 render={<Link href={ctaSecondaryHref} />}
-                className="inline-flex h-[61px] w-[min(310px,100%)] items-center justify-center gap-[10px] rounded-[34px] bg-white p-[10px] shadow-none transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/80 hover:shadow-lg"
+                className="inline-flex min-h-[61px] max-w-full min-w-[150px] items-center justify-center gap-[10px] whitespace-normal rounded-[34px] bg-white p-[10px] shadow-none transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/80 hover:shadow-lg lg:w-[310px] lg:whitespace-nowrap"
                 style={{
                   color: "#374C86",
                   textAlign: "center",
@@ -114,7 +114,7 @@ export function HeroCarousel({
             {ctaPrimaryLabel && ctaPrimaryHref ? (
               <Button
                 render={<Link href={ctaPrimaryHref} />}
-                className="h-[61px] w-[min(266px,100%)] transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg"
+                className="min-h-[61px] max-w-full min-w-[130px] whitespace-normal transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg lg:w-[266px] lg:whitespace-nowrap"
                 style={{
                   display: "inline-flex",
                   padding: "10px",
@@ -140,7 +140,7 @@ export function HeroCarousel({
       </div>
 
       {images.length > 1 ? (
-        <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2" role="tablist" aria-label="Hero slides">
+        <div className="relative flex shrink-0 justify-center gap-2 pt-4 pb-6" role="tablist" aria-label="Hero slides">
           {images.map((image, index) => (
             <button
               key={image.id}
