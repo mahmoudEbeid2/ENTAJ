@@ -1,6 +1,6 @@
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { divisions, products } from "@/database/schema";
+import { divisions, products, productDocuments, type ProductDocumentType } from "@/database/schema";
 
 export async function getDivisions() {
   return db
@@ -41,4 +41,39 @@ export async function getRecommendedProducts() {
     .from(products)
     .where(and(eq(products.isRecommended, true), eq(products.isActive, true)))
     .orderBy(asc(products.recommendedSortOrder));
+}
+
+export async function getProductById(id: number) {
+  const [row] = await db
+    .select({ product: products, division: divisions })
+    .from(products)
+    .innerJoin(divisions, eq(products.divisionId, divisions.id))
+    .where(and(eq(products.id, id), eq(products.isActive, true)))
+    .limit(1);
+  if (!row) return null;
+
+  const documents = await db
+    .select()
+    .from(productDocuments)
+    .where(eq(productDocuments.productId, id));
+
+  return { ...row.product, division: row.division, documents };
+}
+
+export async function getProductDocument(productId: number, type: ProductDocumentType) {
+  const [row] = await db
+    .select({ document: productDocuments, product: products, division: divisions })
+    .from(productDocuments)
+    .innerJoin(products, eq(productDocuments.productId, products.id))
+    .innerJoin(divisions, eq(products.divisionId, divisions.id))
+    .where(
+      and(
+        eq(productDocuments.productId, productId),
+        eq(productDocuments.type, type),
+        eq(products.isActive, true),
+      ),
+    )
+    .limit(1);
+  if (!row) return null;
+  return { ...row.document, product: { ...row.product, division: row.division } };
 }

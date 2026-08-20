@@ -14,6 +14,7 @@ const MIME_EXTENSIONS: Record<string, string> = {
   "image/webp": ".webp",
   "image/gif": ".gif",
   "image/svg+xml": ".svg",
+  "application/pdf": ".pdf",
 };
 
 export class UploadValidationError extends Error {}
@@ -42,6 +43,9 @@ function detectMimeType(buffer: Buffer): string | null {
   const head = buffer.subarray(0, 512).toString("utf8").trimStart();
   if (head.startsWith("<?xml") || head.startsWith("<svg")) {
     return "image/svg+xml";
+  }
+  if (buffer.length >= 5 && buffer.subarray(0, 5).toString("ascii") === "%PDF-") {
+    return "application/pdf";
   }
   return null;
 }

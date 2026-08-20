@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getDivisions } from "@/lib/data/content";
+import { getDivisions, getProductById } from "@/lib/data/content";
 import { getHeroSlides, getPageSection } from "@/lib/data/home";
 import { getOffices, getSeoMeta, getSiteSettings } from "@/lib/data/site";
 import { storageUrl } from "@/lib/utils/asset-url";
@@ -23,14 +23,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ContactPage() {
-  const [slides, getInTouch, settings, offices, divisions] = await Promise.all([
-    getHeroSlides("contact"),
-    getPageSection("contact", "get_in_touch"),
-    getSiteSettings(),
-    getOffices(),
-    getDivisions(),
-  ]);
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ product?: string; division?: string }>;
+}) {
+  const [{ product: productParam, division: divisionParam }, slides, getInTouch, settings, offices, divisions] =
+    await Promise.all([
+      searchParams,
+      getHeroSlides("contact"),
+      getPageSection("contact", "get_in_touch"),
+      getSiteSettings(),
+      getOffices(),
+      getDivisions(),
+    ]);
+
+  const productId = productParam ? Number(productParam) : NaN;
+  const referencedProduct = Number.isInteger(productId) && productId > 0 ? await getProductById(productId) : null;
+  const initialDivisionId = referencedProduct?.division.id ?? (divisionParam ? Number(divisionParam) : undefined);
+  const initialMessage = referencedProduct
+    ? `Regarding: ${referencedProduct.name}${referencedProduct.spec ? ` (${referencedProduct.spec})` : ""} — `
+    : undefined;
 
   const hero = slides[0];
   const logoLockupSrc = storageUrl(settings?.logoLockupPath);
@@ -80,6 +93,8 @@ export default async function ContactPage() {
 
           <ContactForm
             divisions={divisions.map((division) => ({ id: division.id, name: division.shortName ?? division.name }))}
+            initialDivisionId={initialDivisionId}
+            initialMessage={initialMessage}
           />
         </Container>
       </Section>

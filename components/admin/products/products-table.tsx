@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { Pencil, Plus, Search, Star, Trash2 } from "lucide-react";
+import { FileText, Pencil, Plus, Search, Star, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,10 +22,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ProductFormDialog } from "@/components/admin/products/product-form-dialog";
+import {
+  ProductDocumentsDialog,
+  type ProductDocumentSummary,
+} from "@/components/admin/products/product-documents-dialog";
 import { ConfirmDeleteDialog } from "@/components/admin/confirm-delete-dialog";
 import { deleteProduct } from "@/actions/admin/products";
 import { storageUrl } from "@/lib/utils/asset-url";
-import type { divisions, products } from "@/database/schema";
+import type { divisions, products, ProductDocumentType } from "@/database/schema";
 
 type Product = typeof products.$inferSelect;
 type Division = typeof divisions.$inferSelect;
@@ -33,9 +37,11 @@ type Division = typeof divisions.$inferSelect;
 export function ProductsTable({
   products: initialProducts,
   divisions: divisionList,
+  documentsByProductId = {},
 }: {
   products: Product[];
   divisions: Division[];
+  documentsByProductId?: Record<number, Partial<Record<ProductDocumentType, ProductDocumentSummary>>>;
 }) {
   const [search, setSearch] = useState("");
   const [divisionFilter, setDivisionFilter] = useState<string>("all");
@@ -152,6 +158,16 @@ export function ProductsTable({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
+                      <ProductDocumentsDialog
+                        productId={product.id}
+                        productName={product.name}
+                        documents={documentsByProductId[product.id] ?? {}}
+                        trigger={
+                          <Button variant="ghost" size="icon-sm" aria-label={`Manage documents for ${product.name}`}>
+                            <FileText className="size-4" />
+                          </Button>
+                        }
+                      />
                       <ProductFormDialog
                         divisions={divisionOptions}
                         product={product}

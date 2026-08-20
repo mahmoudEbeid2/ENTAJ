@@ -21,14 +21,21 @@ export function RecommendedGrid({ products }: { products: RecommendedProduct[] }
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-[52px] lg:gap-y-[70px]">
+      <div className="grid grid-cols-2 items-stretch gap-x-4 gap-y-6 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
         {visible.map((product, index) => {
-          const card = <ProductCard name={product.name} imageSrc={product.imageSrc} featured={product.featured} />;
+          const card = (
+            <ProductCard
+              id={product.id}
+              name={product.name}
+              imageSrc={product.imageSrc}
+              featured={product.featured}
+            />
+          );
           // First batch reveals on scroll; cards revealed by "Expand" animate in on mount instead,
           // since they may already be within the viewport when the button is clicked.
           if (index < INITIAL_DISPLAY_COUNT) {
             return (
-              <Reveal key={product.id} delay={index * 70}>
+              <Reveal key={product.id} delay={index * 70} className="h-full">
                 {card}
               </Reveal>
             );
@@ -36,7 +43,7 @@ export function RecommendedGrid({ products }: { products: RecommendedProduct[] }
           return (
             <div
               key={product.id}
-              className="animate-in fade-in slide-in-from-bottom-4 animation-fill-mode-both duration-500 ease-out"
+              className="h-full animate-in fade-in slide-in-from-bottom-4 animation-fill-mode-both duration-500 ease-out"
               style={{ animationDelay: `${Math.min((index - INITIAL_DISPLAY_COUNT) * 60, 360)}ms` }}
             >
               {card}

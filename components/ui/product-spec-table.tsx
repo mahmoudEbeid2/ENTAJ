@@ -1,5 +1,5 @@
-import { Fragment } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export interface ProductSpecRow {
   id: number;
@@ -28,9 +28,10 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
           mobile/tablet viewports, so each row renders as a stacked card instead. */}
       <div className="flex flex-col gap-3 lg:hidden">
         {products.map((product) => (
-          <div
+          <Link
             key={product.id}
-            className="rounded-2xl bg-entaj-light-grey px-5 py-4 transition-colors duration-200 hover:bg-entaj-light-grey/70"
+            href={`/products/${product.id}`}
+            className="block rounded-2xl bg-entaj-light-grey px-5 py-4 transition-colors duration-200 hover:bg-entaj-light-grey/70"
           >
             <div className="flex items-start gap-2">
               <RowBullet className="mt-1.5 h-[15px] w-[13px] shrink-0" />
@@ -48,7 +49,7 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
                 {product.description}
               </p>
             ) : null}
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -62,9 +63,9 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
       >
         <div className="bg-entaj-light-grey" style={{ gridColumn: 2, gridRow: `1 / span ${products.length}` }} />
         {products.map((product, index) => (
-          <Fragment key={product.id}>
+          <Link key={product.id} href={`/products/${product.id}`} className="contents group">
             <div
-              className="flex min-h-[52px] items-center gap-2 py-3 pr-3 align-top"
+              className="flex min-h-[52px] items-center gap-2 py-3 pr-3 align-top group-hover:text-entaj-blue/80"
               style={{ gridColumn: 1, gridRow: index + 1 }}
             >
               <RowBullet />
@@ -82,7 +83,7 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
             >
               {product.description}
             </div>
-          </Fragment>
+          </Link>
         ))}
       </div>
     </>

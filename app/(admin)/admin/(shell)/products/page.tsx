@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
 import { asc, isNull } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { divisions, products } from "@/database/schema";
+import { divisions, products, productDocuments } from "@/database/schema";
 import { ProductsTable } from "@/components/admin/products/products-table";
 
 export const metadata: Metadata = { title: "Products — Entaj Admin" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
-  const [allProducts, allDivisions] = await Promise.all([
+  const [allProducts, allDivisions, allDocuments] = await Promise.all([
     db.select().from(products).where(isNull(products.deletedAt)).orderBy(asc(products.name)),
     db.select().from(divisions).where(isNull(divisions.deletedAt)).orderBy(asc(divisions.sortOrder)),
+    db.select().from(productDocuments),
   ]);
+
+  const documentsByProductId = new Map<number, typeof allDocuments>();
+  for (const doc of allDocuments) {
+    const existing = documentsByProductId.get(doc.productId) ?? [];
+    existing.push(doc);
+    documentsByProductId.set(doc.productId, existing);
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -22,7 +30,18 @@ export default async function AdminProductsPage() {
           {allDivisions.length} division{allDivisions.length === 1 ? "" : "s"}.
         </p>
       </div>
-      <ProductsTable products={allProducts} divisions={allDivisions} />
+      <ProductsTable
+        products={allProducts}
+        divisions={allDivisions}
+        documentsByProductId={Object.fromEntries(
+          [...documentsByProductId.entries()].map(([id, docs]) => [
+            id,
+            Object.fromEntries(
+              docs.map((d) => [d.type, { id: d.id, fileName: d.fileName, fileSizeBytes: d.fileSizeBytes }]),
+            ),
+          ]),
+        )}
+      />
     </div>
   );
 }

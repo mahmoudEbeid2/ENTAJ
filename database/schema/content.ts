@@ -1,4 +1,4 @@
-import { boolean, index, int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlEnum, mysqlTable, unique, varchar } from "drizzle-orm/mysql-core";
 import { softDelete, timestamps } from "./common";
 
 export const divisions = mysqlTable("divisions", {
@@ -40,5 +40,27 @@ export const products = mysqlTable(
   (t) => [
     index("products_division_id_idx").on(t.divisionId),
     index("products_is_recommended_idx").on(t.isRecommended),
+  ],
+);
+
+export const PRODUCT_DOCUMENT_TYPES = ["msds", "coa"] as const;
+export type ProductDocumentType = (typeof PRODUCT_DOCUMENT_TYPES)[number];
+
+export const productDocuments = mysqlTable(
+  "product_documents",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    productId: int("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    type: mysqlEnum("type", PRODUCT_DOCUMENT_TYPES).notNull(),
+    filePath: varchar("file_path", { length: 500 }).notNull(),
+    fileName: varchar("file_name", { length: 255 }).notNull(),
+    fileSizeBytes: int("file_size_bytes").notNull(),
+    ...timestamps,
+  },
+  (t) => [
+    index("product_documents_product_id_idx").on(t.productId),
+    unique("product_documents_product_type_unique").on(t.productId, t.type),
   ],
 );

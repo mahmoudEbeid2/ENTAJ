@@ -12,7 +12,15 @@ import { cn } from "@/lib/utils";
 import { submitContactMessage } from "@/actions/contact";
 import { contactFormSchema, type ContactFormValues } from "@/features/contact/schema";
 
-export function ContactForm({ divisions }: { divisions: { id: number; name: string }[] }) {
+export function ContactForm({
+  divisions,
+  initialDivisionId,
+  initialMessage,
+}: {
+  divisions: { id: number; name: string }[];
+  initialDivisionId?: number;
+  initialMessage?: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const [submitted, setSubmitted] = useState(false);
   const {
@@ -24,6 +32,7 @@ export function ContactForm({ divisions }: { divisions: { id: number; name: stri
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
+    defaultValues: { divisionId: initialDivisionId, message: initialMessage ?? "" },
   });
 
   const selectedDivisionId = watch("divisionId");

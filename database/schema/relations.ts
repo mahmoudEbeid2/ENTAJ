@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { activityLogs, admins, permissions, roles, rolePermissions } from "./auth";
-import { divisions, products } from "./content";
+import { divisions, products, productDocuments } from "./content";
 import { contactMessages } from "./contact";
 import { mediaLibrary } from "./media";
 import { blogCategories, blogPosts } from "./cms";
@@ -38,8 +38,13 @@ export const divisionsRelations = relations(divisions, ({ many }) => ({
   contactMessages: many(contactMessages),
 }));
 
-export const productsRelations = relations(products, ({ one }) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
   division: one(divisions, { fields: [products.divisionId], references: [divisions.id] }),
+  documents: many(productDocuments),
+}));
+
+export const productDocumentsRelations = relations(productDocuments, ({ one }) => ({
+  product: one(products, { fields: [productDocuments.productId], references: [products.id] }),
 }));
 
 export const contactMessagesRelations = relations(contactMessages, ({ one }) => ({
