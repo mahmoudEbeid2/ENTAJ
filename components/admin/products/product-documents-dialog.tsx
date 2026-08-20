@@ -48,7 +48,7 @@ function DocumentSlot({
       const result = await saveProductDocument(formData);
       if (result.success) {
         toast.success(`${PRODUCT_DOCUMENT_LABELS[type]} uploaded.`);
-        onChange({ id: document?.id ?? 0, fileName: file.name, fileSizeBytes: file.size });
+        onChange(result.document ?? { id: document?.id ?? 0, fileName: file.name, fileSizeBytes: file.size });
       } else {
         toast.error(result.error ?? "Upload failed.");
       }

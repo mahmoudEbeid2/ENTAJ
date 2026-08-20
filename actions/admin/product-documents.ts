@@ -12,6 +12,7 @@ const DOCUMENT_MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 export interface ProductDocumentActionResult {
   success: boolean;
   error?: string;
+  document?: { id: number; fileName: string; fileSizeBytes: number };
 }
 
 function isDocumentType(value: unknown): value is ProductDocumentType {
@@ -63,17 +64,31 @@ export async function saveProductDocument(formData: FormData): Promise<ProductDo
       fileSizeBytes: saved.sizeBytes,
     };
 
+    let documentId = existing?.id;
     if (existing) {
       await db.update(productDocuments).set(values).where(eq(productDocuments.id, existing.id));
     } else {
       await db.insert(productDocuments).values(values);
+      const inserted = (
+        await db
+          .select({ id: productDocuments.id })
+          .from(productDocuments)
+          .where(and(eq(productDocuments.productId, productId), eq(productDocuments.type, type)))
+          .limit(1)
+      )[0];
+      documentId = inserted?.id;
     }
 
     await logActivity(session.adminId, existing ? "updated" : "created", "product_document", productId);
 
     revalidatePath("/admin/products");
     revalidatePath(`/products/${productId}`);
-    return { success: true };
+    return {
+      success: true,
+      document: documentId
+        ? { id: documentId, fileName: values.fileName, fileSizeBytes: values.fileSizeBytes }
+        : undefined,
+    };
   } catch (err) {
     if (err instanceof UploadValidationError) {
       return { success: false, error: err.message };
