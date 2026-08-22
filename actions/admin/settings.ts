@@ -64,6 +64,7 @@ export async function saveSiteSettings(formData: FormData): Promise<SettingsActi
       contactEmail: parsed.data.contactEmail || null,
       contactWebsite: parsed.data.contactWebsite || null,
       contactPhone: parsed.data.contactPhone || null,
+      maintenanceMode: formData.get("maintenanceMode") === "true",
       ...imagePaths,
     };
 

@@ -15,6 +15,7 @@ export const siteSettings = mysqlTable("site_settings", {
   contactEmail: varchar("contact_email", { length: 255 }),
   contactWebsite: varchar("contact_website", { length: 255 }),
   contactPhone: varchar("contact_phone", { length: 50 }),
+  maintenanceMode: boolean("maintenance_mode").notNull().default(false),
   ...timestamps,
 });
 

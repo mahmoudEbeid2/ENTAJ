@@ -1,0 +1,1 @@
+ALTER TABLE `site_settings` ADD `maintenance_mode` boolean DEFAULT false NOT NULL;

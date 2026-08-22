@@ -47,6 +47,7 @@ export function SettingsForm({
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [logoLockupFile, setLogoLockupFile] = useState<File | null>(null);
   const [footerLogoFile, setFooterLogoFile] = useState<File | null>(null);
+  const [maintenanceMode, setMaintenanceMode] = useState(settings?.maintenanceMode ?? false);
 
   const {
     register,
@@ -77,6 +78,7 @@ export function SettingsForm({
       formData.set("contactEmail", values.contactEmail ?? "");
       formData.set("contactWebsite", values.contactWebsite ?? "");
       formData.set("contactPhone", values.contactPhone ?? "");
+      formData.set("maintenanceMode", String(maintenanceMode));
       if (logoFile) formData.set("logo", logoFile);
       if (faviconFile) formData.set("favicon", faviconFile);
       if (logoLockupFile) formData.set("logoLockup", logoLockupFile);
@@ -97,6 +99,50 @@ export function SettingsForm({
 
   return (
     <div className="flex flex-col gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Maintenance Mode</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <label className="flex items-start justify-between gap-4">
+            <span className="flex flex-col gap-1">
+              <span className="text-sm font-medium">Show &ldquo;Coming Soon&rdquo; page to visitors</span>
+              <span className="text-sm text-muted-foreground">
+                Replaces the entire public site with a coming-soon / maintenance page. The admin panel stays
+                accessible so you can turn it back off. Only applies in production &mdash; local development
+                (<code>npm run dev</code>) always shows the real site.
+              </span>
+            </span>
+            <Switch checked={maintenanceMode} onCheckedChange={setMaintenanceMode} className="mt-0.5 shrink-0" />
+          </label>
+          <Button
+            type="button"
+            size="sm"
+            disabled={isPending || maintenanceMode === (settings?.maintenanceMode ?? false)}
+            className="mt-4 w-fit"
+            onClick={() => {
+              startTransition(async () => {
+                const formData = new FormData();
+                formData.set("siteName", settings?.siteName ?? "ENTAJ");
+                formData.set("tagline", settings?.tagline ?? "");
+                formData.set("footerTagline", settings?.footerTagline ?? "");
+                formData.set("establishedYear", settings?.establishedYear ?? "");
+                formData.set("parentCompany", settings?.parentCompany ?? "");
+                formData.set("contactEmail", settings?.contactEmail ?? "");
+                formData.set("contactWebsite", settings?.contactWebsite ?? "");
+                formData.set("contactPhone", settings?.contactPhone ?? "");
+                formData.set("maintenanceMode", String(maintenanceMode));
+                const result = await saveSiteSettings(formData);
+                if (result.success) toast.success("Maintenance mode updated.");
+                else toast.error(result.error ?? "Something went wrong.");
+              });
+            }}
+          >
+            {isPending ? "Saving..." : "Save Maintenance Mode"}
+          </Button>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>General</CardTitle>
