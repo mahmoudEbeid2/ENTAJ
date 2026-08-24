@@ -322,6 +322,24 @@ async function main() {
       imagePath: "categories/division-base-oils.png",
       sortOrder: 2,
     },
+    // Figma reserves these two as future divisions (heading + category-nav card only —
+    // their spec-table rows in the design are a copy-pasted placeholder of the Base Oils
+    // table, not real product data). Seeded inactive with no products until an admin fills
+    // in real content; kept out of the Home page division carousel and public catalog until then.
+    {
+      slug: "industrial-laundry-detergent",
+      name: "Industrial Laundry Detergent",
+      shortName: "Industrial Laundry",
+      sortOrder: 3,
+      isActive: false,
+    },
+    {
+      slug: "glass-manufacturing-raw-materials",
+      name: "Glass Manufacturing Raw Materials",
+      shortName: "Glass Manufacturing",
+      sortOrder: 4,
+      isActive: false,
+    },
   ];
   await db.insert(divisions).values(divisionDefs);
   const insertedDivisions = await db.select().from(divisions);

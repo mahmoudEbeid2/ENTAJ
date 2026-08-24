@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${saira.variable} h-full antialiased`}>
+    <html lang="en" className={`${saira.variable} h-full scroll-smooth antialiased`}>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
         <Toaster position="top-right" />

@@ -9,6 +9,7 @@ import { PageHero } from "@/components/layout/page-hero";
 import { GradientHeading } from "@/components/ui/gradient-heading";
 import { ProductSpecTable } from "@/components/ui/product-spec-table";
 import { RecommendedGrid } from "@/components/features/divisions/recommended-grid";
+import { CategoryNav } from "@/components/features/divisions/category-nav";
 import { Reveal } from "@/components/ui/reveal";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,6 +37,21 @@ export default async function DivisionsPage() {
     <>
       {hero ? <PageHero title={hero.title} imageSrc={storageUrl(hero.imagePath) ?? ""} imageAlt={hero.title} /> : null}
 
+      {divisionsWithProducts.length > 0 ? (
+        <Section className="pb-0">
+          <Container>
+            <Reveal>
+              <GradientHeading as="h2" className="mb-8 text-center text-3xl lg:text-[36px]">
+                OUR CATEGORIES
+              </GradientHeading>
+              <CategoryNav
+                availableDivisionSlugs={divisionsWithProducts.map((division) => division.slug)}
+              />
+            </Reveal>
+          </Container>
+        </Section>
+      ) : null}
+
       {recommended.length > 0 ? (
         <Section>
           <Container>
@@ -60,7 +76,7 @@ export default async function DivisionsPage() {
       ) : null}
 
       {divisionsWithProducts.map((division) => (
-        <Section key={division.id} className="pt-0">
+        <Section key={division.id} id={division.slug} className="scroll-mt-24 pt-0">
           <Container>
             <Reveal>
               <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
