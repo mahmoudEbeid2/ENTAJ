@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getDivisionsWithProducts, getRecommendedProducts } from "@/lib/data/content";
+import { getDivisionsWithSpecRows, getRecommendedProducts } from "@/lib/data/content";
 import { getHeroSlides, getPageSection } from "@/lib/data/home";
 import { getSeoMeta } from "@/lib/data/site";
 import { storageUrl } from "@/lib/utils/asset-url";
@@ -24,28 +24,30 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DivisionsPage() {
-  const [slides, productsIntro, recommended, divisionsWithProducts] = await Promise.all([
+  const [slides, productsIntro, recommended, divisionsWithSpecRows] = await Promise.all([
     getHeroSlides("divisions"),
     getPageSection("divisions", "products_intro"),
     getRecommendedProducts(),
-    getDivisionsWithProducts(),
+    getDivisionsWithSpecRows(),
   ]);
 
   const hero = slides[0];
 
   return (
     <>
-      {hero ? <PageHero title={hero.title} imageSrc={storageUrl(hero.imagePath) ?? ""} imageAlt={hero.title} /> : null}
+      {hero ? (
+        <PageHero title={hero.title} imageSrc={storageUrl(hero.imagePath) ?? ""} imageAlt={hero.title} size="compact" />
+      ) : null}
 
-      {divisionsWithProducts.length > 0 ? (
-        <Section className="pb-0">
+      {divisionsWithSpecRows.length > 0 ? (
+        <Section className="pt-8 pb-0 lg:pt-12">
           <Container>
             <Reveal>
               <GradientHeading as="h2" className="mb-8 text-center text-3xl lg:text-[36px]">
                 OUR CATEGORIES
               </GradientHeading>
               <CategoryNav
-                availableDivisionSlugs={divisionsWithProducts.map((division) => division.slug)}
+                availableDivisionSlugs={divisionsWithSpecRows.map((division) => division.slug)}
               />
             </Reveal>
           </Container>
@@ -75,18 +77,20 @@ export default async function DivisionsPage() {
         </Section>
       ) : null}
 
-      {divisionsWithProducts.map((division) => (
-        <Section key={division.id} id={division.slug} className="scroll-mt-24 pt-0">
-          <Container>
-            <Reveal>
-              <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
-                {division.name}
-              </GradientHeading>
-              <ProductSpecTable products={division.products.filter((product) => product.spec)} />
-            </Reveal>
-          </Container>
-        </Section>
-      ))}
+      {divisionsWithSpecRows
+        .filter((division) => division.slug !== "animal-nutrition")
+        .map((division) => (
+          <Section key={division.id} id={division.slug} className="scroll-mt-24 pt-0">
+            <Container>
+              <Reveal>
+                <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
+                  {division.name}
+                </GradientHeading>
+                <ProductSpecTable products={division.specRows.filter((row) => row.spec)} />
+              </Reveal>
+            </Container>
+          </Section>
+        ))}
     </>
   );
 }

@@ -1,6 +1,12 @@
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { divisions, products, productDocuments, type ProductDocumentType } from "@/database/schema";
+import {
+  divisions,
+  products,
+  productDocuments,
+  divisionSpecRows,
+  type ProductDocumentType,
+} from "@/database/schema";
 
 export async function getDivisions() {
   return db
@@ -21,16 +27,21 @@ export async function getDivisionBySlug(slug: string) {
   return { ...division, products: divisionProducts };
 }
 
-export async function getDivisionsWithProducts() {
+/**
+ * Divisions with their DIVISIONS-page spec table content (page content, sourced from
+ * division_spec_rows) — independent of the Product Catalog. A spec row's optional
+ * productId is included so the table can still link a row to its catalog product page.
+ */
+export async function getDivisionsWithSpecRows() {
   const allDivisions = await getDivisions();
   return Promise.all(
     allDivisions.map(async (division) => {
-      const divisionProducts = await db
+      const specRows = await db
         .select()
-        .from(products)
-        .where(and(eq(products.divisionId, division.id), eq(products.isActive, true)))
-        .orderBy(asc(products.sortOrder));
-      return { ...division, products: divisionProducts };
+        .from(divisionSpecRows)
+        .where(and(eq(divisionSpecRows.divisionId, division.id), eq(divisionSpecRows.isActive, true)))
+        .orderBy(asc(divisionSpecRows.sortOrder));
+      return { ...division, specRows };
     }),
   );
 }

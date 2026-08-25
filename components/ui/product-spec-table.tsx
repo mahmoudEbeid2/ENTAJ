@@ -3,9 +3,30 @@ import Link from "next/link";
 
 export interface ProductSpecRow {
   id: number;
+  /** Linked catalog product id, if this row represents a real Product — omit/null to render as plain (non-clickable) content. */
+  productId?: number | null;
   name: string;
   spec?: string | null;
   description?: string | null;
+}
+
+function RowWrapper({
+  href,
+  className,
+  children,
+}: {
+  href?: string | null;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (href) {
+    return (
+      <Link href={href} className={className}>
+        {children}
+      </Link>
+    );
+  }
+  return <div className={className}>{children}</div>;
 }
 
 function RowBullet({ className = "h-[15px] w-[13px] shrink-0" }: { className?: string }) {
@@ -28,9 +49,9 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
           mobile/tablet viewports, so each row renders as a stacked card instead. */}
       <div className="flex flex-col gap-3 lg:hidden">
         {products.map((product) => (
-          <Link
+          <RowWrapper
             key={product.id}
-            href={`/products/${product.id}`}
+            href={product.productId ? `/products/${product.productId}` : null}
             className="block rounded-2xl bg-entaj-light-grey px-5 py-4 transition-colors duration-200 hover:bg-entaj-light-grey/70"
           >
             <div className="flex items-start gap-2">
@@ -49,7 +70,7 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
                 {product.description}
               </p>
             ) : null}
-          </Link>
+          </RowWrapper>
         ))}
       </div>
 
@@ -63,7 +84,11 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
       >
         <div className="bg-entaj-light-grey" style={{ gridColumn: 2, gridRow: `1 / span ${products.length}` }} />
         {products.map((product, index) => (
-          <Link key={product.id} href={`/products/${product.id}`} className="contents group">
+          <RowWrapper
+            key={product.id}
+            href={product.productId ? `/products/${product.productId}` : null}
+            className="contents group"
+          >
             <div
               className="flex min-h-[52px] items-center gap-2 py-3 pr-3 align-top group-hover:text-entaj-blue/80"
               style={{ gridColumn: 1, gridRow: index + 1 }}
@@ -83,7 +108,7 @@ export function ProductSpecTable({ products }: { products: ProductSpecRow[] }) {
             >
               {product.description}
             </div>
-          </Link>
+          </RowWrapper>
         ))}
       </div>
     </>

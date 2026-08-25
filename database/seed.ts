@@ -12,6 +12,7 @@ import {
   contactMessages,
   ctaPanels,
   divisions,
+  divisionSpecRows,
   faqs,
   heroSlides,
   marketRegions,
@@ -322,23 +323,19 @@ async function main() {
       imagePath: "categories/division-base-oils.png",
       sortOrder: 2,
     },
-    // Figma reserves these two as future divisions (heading + category-nav card only —
-    // their spec-table rows in the design are a copy-pasted placeholder of the Base Oils
-    // table, not real product data). Seeded inactive with no products until an admin fills
-    // in real content; kept out of the Home page division carousel and public catalog until then.
+    // These two have DIVISIONS-page spec-table content (see divisionSpecRows below) but no
+    // Product Catalog products yet — the table rows are page content, not catalog records.
     {
       slug: "industrial-laundry-detergent",
       name: "Industrial Laundry Detergent",
       shortName: "Industrial Laundry",
       sortOrder: 3,
-      isActive: false,
     },
     {
       slug: "glass-manufacturing-raw-materials",
       name: "Glass Manufacturing Raw Materials",
       shortName: "Glass Manufacturing",
       sortOrder: 4,
-      isActive: false,
     },
   ];
   await db.insert(divisions).values(divisionDefs);
@@ -425,6 +422,66 @@ async function main() {
     })),
   ];
   await db.insert(products).values(productRows);
+  const insertedProducts = await db.select().from(products);
+  const productIdByDivisionAndName = (divisionId: number, name: string) =>
+    insertedProducts.find((p) => p.divisionId === divisionId && p.name === name)?.id ?? null;
+
+  console.log("Seeding DIVISIONS spec-table content (page content, independent of Product Catalog)...");
+  interface SpecRowSeed {
+    name: string;
+    spec: string;
+    description: string;
+    /** Exact Product Catalog name to link this row to, for click-through — omit for rows with no matching catalog product. */
+    linkedProductName?: string;
+  }
+  const waterTreatmentSpecRows: SpecRowSeed[] = [
+    { name: "Poly Aluminium Chloride (PAC 18-30%)", spec: "Drinking Water Grade / Industrial", description: "Coagulation & flocculation, turbidity removal", linkedProductName: "Poly Aluminium Chloride (PAC 18-30%)" },
+    { name: "Sodium Metabisulphite", spec: "Min. 97%", description: "Dechlorination, RO membrane protection", linkedProductName: "Sodium Metabisulphite" },
+    { name: "Magnesium Hydroxide", spec: "Min. 96%", description: "pH correction, brine treatment", linkedProductName: "Magnesium Hydroxide" },
+    { name: "Sodium Hydroxide (Caustic Soda)", spec: "Min. 98%", description: "pH adjustment, post-treatment remineralization", linkedProductName: "Sodium Hydroxide (Caustic Soda)" },
+    { name: "Calcium Chloride", spec: "Flakes / 50%", description: "Remineralization of desalinated water", linkedProductName: "Calcium Chloride" },
+    { name: "Sodium Carbonate", spec: "Liquid 77% / 94%", description: "Water softening, alkalinity adjustment", linkedProductName: "Sodium Carbonate" },
+    { name: "Antiscalant (BW60 & RO Series)", spec: "Min. 99%", description: "Scale prevention on RO membranes", linkedProductName: "Antiscalant (BW60 & RO Series)" },
+    { name: "Calcium Hypochlorite", spec: "Various / 65-70%", description: "Disinfection & shock chlorination", linkedProductName: "Calcium Hypochlorite" },
+  ];
+  const baseOilsSpecRows: SpecRowSeed[] = [
+    { name: "Base Oil", spec: "SN 150 / SN 500 / SN 600", description: "Lubricants, industrial oils, transformer oils", linkedProductName: "Base Oil" },
+    { name: "Bitumen", spec: "40/50, 50/70, 60/70, 80/100", description: "Road paving, waterproofing, infrastructure", linkedProductName: "Bitumen" },
+    { name: "Oxidized Bitumen", spec: "75/25, 85/25, 90/15, 115/15", description: "Industrial coating, cable filling, roofing", linkedProductName: "Oxidized Bitumen" },
+    { name: "Bitumen Emulsion", spec: "SS1, RS1, RS2, MS1, CMS2", description: "Road maintenance, cold-mix applications", linkedProductName: "Bitumen Emulsion" },
+  ];
+  // Industrial Laundry Detergent and Glass Manufacturing Raw Materials have no Product
+  // Catalog items yet — these two divisions' Figma table rows are DIVISIONS-page content
+  // only (not linked to any catalog product) until an admin adds real catalog products.
+  const industrialLaundrySpecRows: SpecRowSeed[] = [
+    { name: "Base Oil", spec: "SN 150 / SN 500 / SN 600", description: "Lubricants, industrial oils, transformer oils" },
+    { name: "Bitumen", spec: "40/50, 50/70, 60/70, 80/100", description: "Road paving, waterproofing, infrastructure" },
+  ];
+  const glassManufacturingSpecRows: SpecRowSeed[] = [
+    { name: "Base Oil", spec: "SN 150 / SN 500 / SN 600", description: "Lubricants, industrial oils, transformer oils" },
+    { name: "Bitumen", spec: "40/50, 50/70, 60/70, 80/100", description: "Road paving, waterproofing, infrastructure" },
+  ];
+
+  const specRowGroups: Array<{ divisionSlug: string; rows: SpecRowSeed[] }> = [
+    { divisionSlug: "water-treatment", rows: waterTreatmentSpecRows },
+    { divisionSlug: "base-oils", rows: baseOilsSpecRows },
+    { divisionSlug: "industrial-laundry-detergent", rows: industrialLaundrySpecRows },
+    { divisionSlug: "glass-manufacturing-raw-materials", rows: glassManufacturingSpecRows },
+  ];
+  const specRowRows = specRowGroups.flatMap(({ divisionSlug, rows }) => {
+    const division = divisionBySlug(divisionSlug);
+    return rows.map((row, i) => ({
+      divisionId: division.id,
+      productId: row.linkedProductName
+        ? productIdByDivisionAndName(division.id, row.linkedProductName)
+        : null,
+      name: row.name,
+      spec: row.spec,
+      description: row.description,
+      sortOrder: i,
+    }));
+  });
+  await db.insert(divisionSpecRows).values(specRowRows);
 
   console.log("Seeding home hero slides...");
   await db.insert(heroSlides).values([
@@ -655,6 +712,7 @@ async function main() {
   console.log("\n=== Seed complete ===");
   console.log(`Divisions: ${insertedDivisions.length}`);
   console.log(`Products: ${productRows.length}`);
+  console.log(`Division spec rows: ${specRowRows.length}`);
   console.log(`Media library entries: ${storageFiles.length}`);
   process.exit(0);
 }

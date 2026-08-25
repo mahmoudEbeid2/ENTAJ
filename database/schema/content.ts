@@ -43,6 +43,28 @@ export const products = mysqlTable(
   ],
 );
 
+// Page content for the DIVISIONS spec tables (Figma table rows), independent of the
+// Product Catalog. A row MAY optionally link to a real catalog product (productId) so its
+// row stays clickable through to that product's detail page — but the row's existence and
+// text content are not the catalog, and a row must not require a catalog product to exist.
+export const divisionSpecRows = mysqlTable(
+  "division_spec_rows",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    divisionId: int("division_id")
+      .notNull()
+      .references(() => divisions.id, { onDelete: "cascade" }),
+    productId: int("product_id").references(() => products.id, { onDelete: "set null" }),
+    name: varchar("name", { length: 255 }).notNull(),
+    spec: varchar("spec", { length: 255 }),
+    description: varchar("description", { length: 500 }),
+    sortOrder: int("sort_order").notNull().default(0),
+    isActive: boolean("is_active").notNull().default(true),
+    ...timestamps,
+  },
+  (t) => [index("division_spec_rows_division_id_idx").on(t.divisionId)],
+);
+
 export const PRODUCT_DOCUMENT_TYPES = ["msds", "coa"] as const;
 export type ProductDocumentType = (typeof PRODUCT_DOCUMENT_TYPES)[number];
 
