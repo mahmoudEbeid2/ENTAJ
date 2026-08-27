@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { getDivisionsWithSpecRows, getRecommendedProducts } from "@/lib/data/content";
-import { filterDivisionsWithTableContent } from "@/lib/data/division-table-content";
+import { getCategories, getCategorySpecTables, getRecommendedProducts } from "@/lib/data/content";
 import { getHeroSlides, getPageSection } from "@/lib/data/home";
 import { getSeoMeta } from "@/lib/data/site";
 import { storageUrl } from "@/lib/utils/asset-url";
@@ -25,16 +24,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DivisionsPage() {
-  const [slides, productsIntro, recommended, divisionsWithSpecRows] = await Promise.all([
+  const [slides, productsIntro, recommended, categories, specTables] = await Promise.all([
     getHeroSlides("divisions"),
     getPageSection("divisions", "products_intro"),
     getRecommendedProducts(),
-    getDivisionsWithSpecRows(),
+    getCategories(),
+    getCategorySpecTables(),
   ]);
 
   const hero = slides[0];
-  // Rendering condition: has DIVISIONS-page table content, never Product Catalog state.
-  const divisionsWithContent = filterDivisionsWithTableContent(divisionsWithSpecRows);
 
   return (
     <>
@@ -42,7 +40,7 @@ export default async function DivisionsPage() {
         <PageHero title={hero.title} imageSrc={storageUrl(hero.imagePath) ?? ""} imageAlt={hero.title} size="compact" />
       ) : null}
 
-      {divisionsWithContent.length > 0 ? (
+      {categories.length > 0 ? (
         <Section className="pt-8 pb-0 lg:pt-12">
           <Container>
             <Reveal>
@@ -50,7 +48,7 @@ export default async function DivisionsPage() {
                 OUR CATEGORIES
               </GradientHeading>
               <CategoryNav
-                availableDivisionSlugs={divisionsWithContent.map((division) => division.slug)}
+                availableDivisionSlugs={categories.map((category) => category.slug)}
               />
             </Reveal>
           </Container>
@@ -80,18 +78,21 @@ export default async function DivisionsPage() {
         </Section>
       ) : null}
 
-      {divisionsWithContent.map((division) => (
-        <Section key={division.id} id={division.slug} className="scroll-mt-24 pt-0">
-          <Container>
-            <Reveal>
-              <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
-                {division.name}
-              </GradientHeading>
-              <ProductSpecTable products={division.specRows} />
-            </Reveal>
-          </Container>
-        </Section>
-      ))}
+      {specTables
+        .filter((table) => table.specRows && table.specRows.length > 0)
+        .map((table) => (
+          <Section key={table.id} id={table.slug} className="scroll-mt-24 pt-0">
+            <Container>
+              <Reveal>
+                <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
+                  {table.name}
+                </GradientHeading>
+                <ProductSpecTable products={table.specRows} />
+              </Reveal>
+            </Container>
+          </Section>
+        ))}
     </>
   );
 }
+

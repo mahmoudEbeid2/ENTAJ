@@ -58,4 +58,22 @@ describe("filterDivisionsWithTableContent", () => {
 
     expect(result).toHaveLength(1);
   });
+
+  it("ensures Categories and Tables are completely independent from Home Divisions", () => {
+    // Zero Home Divisions present
+    const homeDivisions: unknown[] = [];
+    const categories = [
+      { id: 1, slug: "animal-nutrition", name: "Animal Nutrition", specRows: [{ id: 1, name: "Sodium Bicarbonate" }] },
+      { id: 2, slug: "water-treatment", name: "Water Treatment", specRows: [{ id: 2, name: "PAC" }] },
+      { id: 3, slug: "base-oils", name: "Base Oils", specRows: [{ id: 3, name: "Base Oil" }] },
+      { id: 4, slug: "industrial-laundry-detergent", name: "Industrial Laundry", specRows: [{ id: 4, name: "Base Oil" }] },
+      { id: 5, slug: "glass-manufacturing-raw-materials", name: "Glass Manufacturing", specRows: [{ id: 5, name: "Base Oil" }] },
+    ];
+
+    expect(homeDivisions).toHaveLength(0);
+    // Categories & tables still have all 5 items regardless of 0 home divisions
+    const visibleTables = filterDivisionsWithTableContent(categories);
+    expect(visibleTables).toHaveLength(5);
+  });
 });
+

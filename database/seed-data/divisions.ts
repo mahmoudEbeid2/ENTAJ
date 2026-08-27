@@ -6,59 +6,105 @@
 // page to go live missing the Animal Nutrition, Industrial Laundry Detergent, and Glass
 // Manufacturing Raw Materials tables.
 
-export interface DivisionDef {
+export interface HomeDivisionDef {
   slug: string;
   name: string;
-  shortName: string;
-  subtitle?: string;
-  numeral?: string;
-  imagePath?: string;
+  subtitle: string;
+  numeral: string;
+  imagePath: string;
+  href: string;
+  ctaLabel: string;
   sortOrder: number;
 }
 
-export const divisionDefs: DivisionDef[] = [
+export const homeDivisionDefs: HomeDivisionDef[] = [
+  {
+    slug: "animal-nutrition",
+    name: "Animal Nutrition & Veterinary Raw Materials",
+    subtitle: "The Building Blocks of Animal Health Start Here",
+    numeral: "Division 1",
+    imagePath: "categories/division-animal-nutrition.png",
+    href: "/divisions#animal-nutrition",
+    ctaLabel: "GO TO PRODUCTS",
+    sortOrder: 0,
+  },
+  {
+    slug: "water-treatment",
+    name: "Water Treatment Chemicals",
+    subtitle: "Clean Water Demands Reliable Chemistry.",
+    numeral: "Division 2",
+    imagePath: "categories/division-water-treatment.png",
+    href: "/divisions#water-treatment",
+    ctaLabel: "GO TO PRODUCTS",
+    sortOrder: 1,
+  },
+  {
+    slug: "base-oils",
+    name: "Base Oils & Petroleum Products",
+    subtitle: "Precision-Grade Base Oils for Industrial Applications.",
+    numeral: "Division 3",
+    imagePath: "categories/division-base-oils.png",
+    href: "/divisions#base-oils",
+    ctaLabel: "GO TO PRODUCTS",
+    sortOrder: 2,
+  },
+];
+
+export interface CategoryDef {
+  slug: string;
+  name: string;
+  shortName: string;
+  iconPath?: string;
+  bgColor?: string;
+  sortOrder: number;
+}
+
+export const categoryDefs: CategoryDef[] = [
   {
     slug: "animal-nutrition",
     name: "Animal Nutrition & Veterinary Raw Materials",
     shortName: "Animal Nutrition",
-    subtitle: "The Building Blocks of Animal Health Start Here",
-    numeral: "Division 1",
-    imagePath: "categories/division-animal-nutrition.png",
+    iconPath: "/assets/icons/icon-category-feed-additives.png",
+    bgColor: "#34C759",
     sortOrder: 0,
   },
   {
     slug: "water-treatment",
     name: "Water Treatment Chemicals",
     shortName: "Water Treatment",
-    subtitle: "Clean Water Demands Reliable Chemistry.",
-    numeral: "Division 2",
-    imagePath: "categories/division-water-treatment.png",
+    iconPath: "/assets/icons/icon-category-water-treatment.svg",
+    bgColor: "#4EC5F9",
     sortOrder: 1,
   },
   {
     slug: "base-oils",
     name: "Base Oils & Petroleum Products",
     shortName: "Base Oils",
-    subtitle: "Precision-Grade Base Oils for Industrial Applications.",
-    numeral: "Division 3",
-    imagePath: "categories/division-base-oils.png",
+    iconPath: "/assets/icons/icon-category-base-oils.svg",
+    bgColor: "#F7DA8D",
     sortOrder: 2,
   },
-  // These two have DIVISIONS-page spec-table content (see specRowGroups below) but no
-  // Product Catalog products yet — the table rows are page content, not catalog records.
   {
     slug: "industrial-laundry-detergent",
     name: "Industrial Laundry Detergent",
     shortName: "Industrial Laundry",
+    iconPath: "/assets/icons/icon-category-industrial-laundry.svg",
+    bgColor: "#FF6060",
     sortOrder: 3,
   },
   {
     slug: "glass-manufacturing-raw-materials",
     name: "Glass Manufacturing Raw Materials",
     shortName: "Glass Manufacturing",
+    iconPath: "/assets/icons/icon-category-glass-manufacturing.svg",
+    bgColor: "#BEBEBE",
     sortOrder: 4,
   },
 ];
+
+export type DivisionDef = CategoryDef;
+export const divisionDefs = categoryDefs;
+
 
 export interface ProductSeed {
   name: string;

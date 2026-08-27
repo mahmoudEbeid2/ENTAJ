@@ -1,6 +1,7 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, isNull } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
+  categories,
   divisions,
   products,
   productDocuments,
@@ -8,43 +9,53 @@ import {
   type ProductDocumentType,
 } from "@/database/schema";
 
-export async function getDivisions() {
+export async function getCategories() {
   return db
     .select()
-    .from(divisions)
-    .where(eq(divisions.isActive, true))
-    .orderBy(asc(divisions.sortOrder));
+    .from(categories)
+    .where(and(eq(categories.isActive, true), isNull(categories.deletedAt)))
+    .orderBy(asc(categories.sortOrder));
 }
 
-export async function getDivisionBySlug(slug: string) {
-  const [division] = await db.select().from(divisions).where(eq(divisions.slug, slug)).limit(1);
-  if (!division) return null;
-  const divisionProducts = await db
+export const getDivisions = getCategories;
+
+export async function getCategoryBySlug(slug: string) {
+  const [category] = await db
+    .select()
+    .from(categories)
+    .where(and(eq(categories.slug, slug), isNull(categories.deletedAt)))
+    .limit(1);
+  if (!category) return null;
+  const categoryProducts = await db
     .select()
     .from(products)
-    .where(and(eq(products.divisionId, division.id), eq(products.isActive, true)))
+    .where(and(eq(products.divisionId, category.id), eq(products.isActive, true), isNull(products.deletedAt)))
     .orderBy(asc(products.sortOrder));
-  return { ...division, products: divisionProducts };
+  return { ...category, products: categoryProducts };
 }
 
+export const getDivisionBySlug = getCategoryBySlug;
+
 /**
- * Divisions with their DIVISIONS-page spec table content (page content, sourced from
- * division_spec_rows) — independent of the Product Catalog. A spec row's optional
- * productId is included so the table can still link a row to its catalog product page.
+ * Loads categories alongside their specification table rows (independent of Home Divisions
+ * and independent of Product Catalog product counts).
  */
-export async function getDivisionsWithSpecRows() {
-  const allDivisions = await getDivisions();
+export async function getCategorySpecTables() {
+  const allCategories = await getCategories();
   return Promise.all(
-    allDivisions.map(async (division) => {
+    allCategories.map(async (category) => {
       const specRows = await db
         .select()
         .from(divisionSpecRows)
-        .where(and(eq(divisionSpecRows.divisionId, division.id), eq(divisionSpecRows.isActive, true)))
+        .where(and(eq(divisionSpecRows.divisionId, category.id), eq(divisionSpecRows.isActive, true)))
         .orderBy(asc(divisionSpecRows.sortOrder));
-      return { ...division, specRows };
+      return { ...category, specRows };
     }),
   );
 }
+
+export const getDivisionsWithSpecRows = getCategorySpecTables;
+
 
 export async function getRecommendedProducts() {
   return db

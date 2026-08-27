@@ -7,7 +7,8 @@ import {
   mysqlTable,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { PAGE_SLUGS, timestamps } from "./common";
+import { PAGE_SLUGS, softDelete, timestamps } from "./common";
+
 
 const pageEnum = mysqlEnum("page", PAGE_SLUGS);
 
@@ -112,3 +113,20 @@ export const pageSections = mysqlTable(
   },
   (t) => [index("page_sections_page_section_key_idx").on(t.page, t.sectionKey)],
 );
+
+export const homeDivisions = mysqlTable("home_divisions", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 150 }),
+  numeral: varchar("numeral", { length: 20 }),
+  name: varchar("name", { length: 255 }).notNull(),
+  subtitle: varchar("subtitle", { length: 255 }),
+  description: varchar("description", { length: 1000 }),
+  imagePath: varchar("image_path", { length: 500 }),
+  href: varchar("href", { length: 255 }),
+  ctaLabel: varchar("cta_label", { length: 100 }).default("GO TO PRODUCTS"),
+  sortOrder: int("sort_order").notNull().default(0),
+  isActive: boolean("is_active").notNull().default(true),
+  ...timestamps,
+  ...softDelete,
+});
+

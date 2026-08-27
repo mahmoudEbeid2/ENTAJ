@@ -11,8 +11,8 @@ export interface MessageActionResult {
   error?: string;
 }
 
-const STATUSES = ["new", "read", "archived"] as const;
-type MessageStatus = (typeof STATUSES)[number];
+export type MessageStatus = "new" | "read" | "archived";
+
 
 export async function updateMessageStatus(
   id: number,

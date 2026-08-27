@@ -1,7 +1,7 @@
 import { boolean, index, int, mysqlEnum, mysqlTable, unique, varchar } from "drizzle-orm/mysql-core";
 import { softDelete, timestamps } from "./common";
 
-export const divisions = mysqlTable("divisions", {
+export const categories = mysqlTable("divisions", {
   id: int("id").autoincrement().primaryKey(),
   slug: varchar("slug", { length: 150 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -10,12 +10,17 @@ export const divisions = mysqlTable("divisions", {
   numeral: varchar("numeral", { length: 20 }),
   description: varchar("description", { length: 1000 }),
   imagePath: varchar("image_path", { length: 500 }),
+  iconPath: varchar("icon_path", { length: 500 }),
+  bgColor: varchar("bg_color", { length: 50 }),
   ctaLabel: varchar("cta_label", { length: 100 }).default("GO TO PRODUCTS"),
   sortOrder: int("sort_order").notNull().default(0),
   isActive: boolean("is_active").notNull().default(true),
   ...timestamps,
   ...softDelete,
 });
+
+export const divisions = categories;
+
 
 export const products = mysqlTable(
   "products",

@@ -13,28 +13,40 @@
 //   npx tsx database/backfill-division-content.ts
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { divisions, products, divisionSpecRows } from "@/database/schema";
-import { divisionDefs, productSeedGroups, specRowGroups } from "@/database/seed-data/divisions";
+import { homeDivisions, categories, divisions, products, divisionSpecRows } from "@/database/schema";
+import { homeDivisionDefs, categoryDefs, divisionDefs, productSeedGroups, specRowGroups } from "@/database/seed-data/divisions";
 
 async function main() {
-  console.log("Backfilling divisions...");
+  console.log("Backfilling home divisions (Home page cards)...");
+  const existingHomeDivisions = await db.select().from(homeDivisions);
+  const existingHomeSlugs = new Set(existingHomeDivisions.map((d) => d.slug).filter(Boolean));
+  const missingHomeDivisions = homeDivisionDefs.filter((d) => !existingHomeSlugs.has(d.slug));
+  if (missingHomeDivisions.length > 0) {
+    await db.insert(homeDivisions).values(missingHomeDivisions);
+    console.log(`  Inserted ${missingHomeDivisions.length} missing home division(s).`);
+  } else {
+    console.log("  All home divisions already present.");
+  }
+
+  console.log("Backfilling categories...");
   const existingDivisions = await db.select().from(divisions);
   const existingBySlug = new Map(existingDivisions.map((d) => [d.slug, d]));
 
-  const missingDivisions = divisionDefs.filter((d) => !existingBySlug.has(d.slug));
+  const missingDivisions = categoryDefs.filter((d) => !existingBySlug.has(d.slug));
   if (missingDivisions.length > 0) {
-    await db.insert(divisions).values(missingDivisions);
-    console.log(`  Inserted ${missingDivisions.length} missing division(s): ${missingDivisions.map((d) => d.slug).join(", ")}`);
+    await db.insert(categories).values(missingDivisions);
+    console.log(`  Inserted ${missingDivisions.length} missing category/categories: ${missingDivisions.map((d) => d.slug).join(", ")}`);
   } else {
-    console.log("  All divisions already present — nothing to insert.");
+    console.log("  All categories already present — nothing to insert.");
   }
 
   const allDivisions = await db.select().from(divisions);
   const divisionBySlug = (slug: string) => {
     const division = allDivisions.find((d) => d.slug === slug);
-    if (!division) throw new Error(`Division "${slug}" not found after backfill — check seed-data/divisions.ts`);
+    if (!division) throw new Error(`Category "${slug}" not found after backfill — check seed-data/divisions.ts`);
     return division;
   };
+
 
   console.log("Backfilling Product Catalog rows (only for divisions with zero products)...");
   for (const { divisionSlug, products: productSeeds } of productSeedGroups) {

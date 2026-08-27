@@ -18,11 +18,11 @@ import { DivisionFormDialog } from "@/components/admin/divisions/division-form-d
 import { ConfirmDeleteDialog } from "@/components/admin/confirm-delete-dialog";
 import { deleteDivision } from "@/actions/admin/divisions";
 import { storageUrl } from "@/lib/utils/asset-url";
-import type { divisions } from "@/database/schema";
+import type { homeDivisions } from "@/database/schema";
 
-type Division = typeof divisions.$inferSelect & { productCount: number };
+type HomeDivision = typeof homeDivisions.$inferSelect;
 
-export function DivisionsTable({ divisions: initialDivisions }: { divisions: Division[] }) {
+export function DivisionsTable({ divisions: initialDivisions }: { divisions: HomeDivision[] }) {
   const [search, setSearch] = useState("");
 
   const filtered = initialDivisions.filter((d) =>
@@ -35,7 +35,7 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
         <div className="relative sm:max-w-xs">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search divisions..."
+            placeholder="Search home divisions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-8"
@@ -45,7 +45,7 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
           trigger={
             <Button>
               <Plus className="size-4" />
-              Add Division
+              Add Home Division
             </Button>
           }
         />
@@ -53,10 +53,10 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-16 text-center">
-          <p className="text-sm font-medium">No divisions found</p>
+          <p className="text-sm font-medium">No home divisions found</p>
           <p className="text-sm text-muted-foreground">
             {initialDivisions.length === 0
-              ? "Add your first division to get started."
+              ? "Add your first home division card to get started."
               : "Try a different search."}
           </p>
         </div>
@@ -66,8 +66,9 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
             <TableHeader>
               <TableRow>
                 <TableHead className="w-16">Image</TableHead>
+                <TableHead className="w-24">Numeral</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Products</TableHead>
+                <TableHead>Subtitle</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -88,8 +89,9 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
                       ) : null}
                     </div>
                   </TableCell>
+                  <TableCell className="text-muted-foreground text-sm font-mono">{division.numeral ?? "—"}</TableCell>
                   <TableCell className="font-medium whitespace-normal">{division.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{division.productCount}</TableCell>
+                  <TableCell className="text-muted-foreground text-xs max-w-xs truncate">{division.subtitle ?? "—"}</TableCell>
                   <TableCell>
                     <Badge variant={division.isActive ? "default" : "secondary"}>
                       {division.isActive ? "Active" : "Inactive"}
@@ -111,7 +113,7 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
                       />
                       <ConfirmDeleteDialog
                         title={`Delete "${division.name}"?`}
-                        description="This division will be removed from the site. This action cannot be undone."
+                        description="This home division card will be removed from the Home page. Categories and products will not be affected."
                         onConfirm={() => deleteDivision(division.id)}
                         trigger={
                           <Button
@@ -135,3 +137,4 @@ export function DivisionsTable({ divisions: initialDivisions }: { divisions: Div
     </div>
   );
 }
+

@@ -9,12 +9,14 @@ import {
   admins,
   blogCategories,
   blogPosts,
+  categories,
   contactMessages,
   ctaPanels,
   divisions,
   divisionSpecRows,
   faqs,
   heroSlides,
+  homeDivisions,
   marketRegions,
   mediaLibrary,
   navItems,
@@ -35,7 +37,10 @@ import {
   valueProps,
   whyUsFeatures,
 } from "@/database/schema";
-import { divisionDefs, productSeedGroups, specRowGroups } from "@/database/seed-data/divisions";
+import { homeDivisionDefs, categoryDefs, productSeedGroups, specRowGroups } from "@/database/seed-data/divisions";
+
+
+
 
 const ROOT = process.cwd();
 const STORAGE_ROOT = path.resolve(ROOT, process.env.STORAGE_ROOT || "storage");
@@ -295,10 +300,14 @@ async function main() {
     },
   ]);
 
-  console.log("Seeding divisions...");
-  await db.insert(divisions).values(divisionDefs);
+  console.log("Seeding home divisions (Home page cards)...");
+  await db.insert(homeDivisions).values(homeDivisionDefs);
+
+  console.log("Seeding categories...");
+  await db.insert(categories).values(categoryDefs);
   const insertedDivisions = await db.select().from(divisions);
   const divisionBySlug = (slug: string) => insertedDivisions.find((d) => d.slug === slug)!;
+
 
   console.log("Seeding products (catalog + recommended)...");
   const productRows = productSeedGroups.flatMap(({ divisionSlug, products: productSeeds }) =>

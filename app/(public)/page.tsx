@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { getCtaPanel, getMarketRegions, getPageSection, getStats, getValueProps, getWhyUsFeatures, getHeroSlides } from "@/lib/data/home";
-import { getDivisions } from "@/lib/data/content";
+import { getCtaPanel, getHomeDivisions, getMarketRegions, getPageSection, getStats, getValueProps, getWhyUsFeatures, getHeroSlides } from "@/lib/data/home";
 import { getOffices, getSeoMeta, getSiteSettings } from "@/lib/data/site";
 import { storageUrl } from "@/lib/utils/asset-url";
 import { Container } from "@/components/ui/container";
@@ -49,7 +48,7 @@ export default async function HomePage() {
     getStats("home", "counter"),
     getPageSection("home", "about_summary"),
     getValueProps(),
-    getDivisions(),
+    getHomeDivisions(),
     getPageSection("home", "what_sets_apart"),
     getPageSection("home", "why_entaj_intro"),
     getWhyUsFeatures(),
@@ -59,6 +58,7 @@ export default async function HomePage() {
     getSiteSettings(),
     getOffices(),
   ]);
+
   const contactAddressLine = offices.map((office) => office.address).join(" | ");
 
   const heroImages = slides.map((slide) => ({

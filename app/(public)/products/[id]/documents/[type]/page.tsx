@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+
 import { FileText } from "lucide-react";
 import { getProductDocument } from "@/lib/data/content";
 import { formatBytes } from "@/lib/utils/format-bytes";

@@ -18,13 +18,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
-import { saveDivision } from "@/actions/admin/divisions";
-import { divisionFormSchema, type DivisionFormValues } from "@/features/admin/divisions/schema";
+import { saveCategory } from "@/actions/admin/categories";
+import { categoryFormSchema, type CategoryFormValues } from "@/features/admin/categories/schema";
 import { storageUrl } from "@/lib/utils/asset-url";
-import type { homeDivisions } from "@/database/schema";
+import type { categories } from "@/database/schema";
 
-type Division = typeof homeDivisions.$inferSelect;
 
+
+type Category = typeof categories.$inferSelect;
 
 function slugify(value: string) {
   return value
@@ -34,17 +35,17 @@ function slugify(value: string) {
     .replace(/(^-|-$)/g, "");
 }
 
-export function DivisionFormDialog({
-  division,
+export function CategoryFormDialog({
+  category,
   trigger,
 }: {
-  division?: Division;
+  category?: Category;
   trigger: ReactElement;
 }) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [slugEdited, setSlugEdited] = useState(!!division);
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [slugEdited, setSlugEdited] = useState(!!category);
 
   const {
     register,
@@ -53,46 +54,41 @@ export function DivisionFormDialog({
     setValue,
     reset,
     formState: { errors },
-  } = useForm<DivisionFormValues>({
-    resolver: zodResolver(divisionFormSchema),
-    defaultValues: division
+  } = useForm<CategoryFormValues>({
+    resolver: zodResolver(categoryFormSchema),
+    defaultValues: category
       ? {
-          id: division.id,
-          name: division.name,
-          slug: division.slug ?? "",
-          shortName: "",
-          subtitle: division.subtitle ?? "",
-          numeral: division.numeral ?? "",
-          description: division.description ?? "",
-          ctaLabel: division.ctaLabel ?? "",
-          isActive: division.isActive,
-          sortOrder: division.sortOrder,
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+          shortName: category.shortName ?? "",
+          description: category.description ?? "",
+          bgColor: category.bgColor ?? "",
+          isActive: category.isActive,
+          sortOrder: category.sortOrder,
         }
       : { isActive: true, sortOrder: 0 },
-
   });
 
-  const onSubmit = (values: DivisionFormValues) => {
+  const onSubmit = (values: CategoryFormValues) => {
     startTransition(async () => {
       const formData = new FormData();
       if (values.id) formData.set("id", String(values.id));
       formData.set("name", values.name);
       formData.set("slug", values.slug);
       formData.set("shortName", values.shortName ?? "");
-      formData.set("subtitle", values.subtitle ?? "");
-      formData.set("numeral", values.numeral ?? "");
       formData.set("description", values.description ?? "");
-      formData.set("ctaLabel", values.ctaLabel ?? "");
+      formData.set("bgColor", values.bgColor ?? "");
       formData.set("isActive", String(values.isActive));
       formData.set("sortOrder", String(values.sortOrder));
-      if (imageFile) formData.set("image", imageFile);
+      if (iconFile) formData.set("icon", iconFile);
 
-      const result = await saveDivision(formData);
+      const result = await saveCategory(formData);
       if (result.success) {
-        toast.success(division ? "Division updated." : "Division created.");
+        toast.success(category ? "Category updated." : "Category created.");
         setOpen(false);
-        setImageFile(null);
-        if (!division) {
+        setIconFile(null);
+        if (!category) {
           reset();
           setSlugEdited(false);
         }
@@ -107,13 +103,13 @@ export function DivisionFormDialog({
       <DialogTrigger render={trigger} />
       <DialogContent className="max-h-[90vh] overflow-x-hidden overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{division ? "Edit Division" : "Add Division"}</DialogTitle>
+          <DialogTitle>{category ? "Edit Category" : "Add Category"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
           <Field>
-            <FieldLabel htmlFor="division-name">Name</FieldLabel>
+            <FieldLabel htmlFor="category-name">Name</FieldLabel>
             <Input
-              id="division-name"
+              id="category-name"
               aria-invalid={!!errors.name}
               {...register("name", {
                 onChange: (e) => {
@@ -125,9 +121,9 @@ export function DivisionFormDialog({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="division-slug">Slug</FieldLabel>
+            <FieldLabel htmlFor="category-slug">Slug</FieldLabel>
             <Input
-              id="division-slug"
+              id="category-slug"
               aria-invalid={!!errors.slug}
               {...register("slug", { onChange: () => setSlugEdited(true) })}
             />
@@ -136,35 +132,25 @@ export function DivisionFormDialog({
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="division-short-name">Short Name</FieldLabel>
-              <Input id="division-short-name" {...register("shortName")} />
+              <FieldLabel htmlFor="category-short-name">Short Name</FieldLabel>
+              <Input id="category-short-name" {...register("shortName")} />
             </Field>
             <Field>
-              <FieldLabel htmlFor="division-numeral">Numeral</FieldLabel>
-              <Input id="division-numeral" placeholder="e.g. 01" {...register("numeral")} />
+              <FieldLabel htmlFor="category-bg-color">Card Color (Hex)</FieldLabel>
+              <Input id="category-bg-color" placeholder="#34C759" {...register("bgColor")} />
             </Field>
           </div>
 
           <Field>
-            <FieldLabel htmlFor="division-subtitle">Subtitle</FieldLabel>
-            <Input id="division-subtitle" {...register("subtitle")} />
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="division-description">Description</FieldLabel>
-            <Textarea id="division-description" rows={3} {...register("description")} />
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="division-cta-label">CTA Button Label</FieldLabel>
-            <Input id="division-cta-label" placeholder="GO TO PRODUCTS" {...register("ctaLabel")} />
+            <FieldLabel htmlFor="category-description">Description</FieldLabel>
+            <Textarea id="category-description" rows={3} {...register("description")} />
           </Field>
 
           <ImageUploadField
-            label="Division Banner"
-            defaultUrl={division?.imagePath ? storageUrl(division.imagePath) : null}
-            onFileChange={setImageFile}
-            aspect="aspect-video"
+            label="Category Icon"
+            defaultUrl={category?.iconPath ? (category.iconPath.startsWith("/") ? category.iconPath : storageUrl(category.iconPath)) : null}
+            onFileChange={setIconFile}
+            aspect="aspect-square"
           />
 
           <Controller
@@ -180,7 +166,7 @@ export function DivisionFormDialog({
 
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save Division"}
+              {isPending ? "Saving..." : "Save Category"}
             </Button>
           </DialogFooter>
         </form>

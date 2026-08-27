@@ -65,11 +65,19 @@ const CATEGORY_CARDS: CategoryCardDef[] = [
   },
 ];
 
-export function CategoryNav({ availableDivisionSlugs }: { availableDivisionSlugs: string[] }) {
+export function CategoryNav({
+  availableDivisionSlugs,
+  availableCategorySlugs,
+}: {
+  availableDivisionSlugs?: string[];
+  availableCategorySlugs?: string[];
+}) {
+  const slugs = availableCategorySlugs ?? availableDivisionSlugs ?? CATEGORY_CARDS.map((c) => c.divisionSlug!).filter(Boolean);
   const linkedCards = CATEGORY_CARDS.filter(
-    (card) => card.divisionSlug && availableDivisionSlugs.includes(card.divisionSlug),
+    (card) => card.divisionSlug && slugs.includes(card.divisionSlug),
   );
   const [activeSlug, setActiveSlug] = useState(linkedCards[0]?.divisionSlug ?? "");
+
 
   useEffect(() => {
     const sections = linkedCards
@@ -95,7 +103,7 @@ export function CategoryNav({ availableDivisionSlugs }: { availableDivisionSlugs
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availableDivisionSlugs.join(",")]);
+  }, [slugs.join(",")]);
 
   return (
     <nav
@@ -103,8 +111,9 @@ export function CategoryNav({ availableDivisionSlugs }: { availableDivisionSlugs
       className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-5 lg:gap-6"
     >
       {CATEGORY_CARDS.map((card) => {
-        const isLinked = !!card.divisionSlug && availableDivisionSlugs.includes(card.divisionSlug);
+        const isLinked = !!card.divisionSlug && slugs.includes(card.divisionSlug);
         const isActive = isLinked && activeSlug === card.divisionSlug;
+
 
         const content = (
           <>
