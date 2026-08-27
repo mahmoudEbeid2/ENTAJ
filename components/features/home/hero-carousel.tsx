@@ -48,7 +48,9 @@ export function HeroCarousel({
           sizes="100vw"
           className="object-cover transition-opacity duration-1000"
           style={{ opacity: index === current ? 1 : 0 }}
+          unoptimized
         />
+
       ))}
 
       {/* Black overlay for text readability */}

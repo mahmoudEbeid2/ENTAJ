@@ -35,7 +35,9 @@ export function DivisionCard({
             fill
             sizes="(min-width: 1024px) 1119px, 100vw"
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            unoptimized
           />
+
           <div className="absolute inset-0 flex flex-col justify-start p-6 lg:p-[53px]">
             {numeral ? (
               <p className="font-expanded text-4xl font-thin leading-none sm:text-6xl lg:text-[96px]">{numeral}</p>
