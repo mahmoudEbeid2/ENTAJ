@@ -51,8 +51,9 @@ export function HeroCarousel({
         />
       ))}
 
-      {/* Subtle black overlay for text readability */}
-      <div className="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true" />
+      {/* Black overlay for text readability */}
+      <div className="absolute inset-0 bg-black/50 pointer-events-none" aria-hidden="true" />
+
 
       <div className="relative z-10 flex w-full flex-1 max-w-[1280px] flex-col items-center justify-center gap-6 px-6 mx-auto text-center lg:justify-start lg:pt-[342.62px] lg:px-10">
 
