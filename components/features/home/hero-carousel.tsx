@@ -51,7 +51,11 @@ export function HeroCarousel({
         />
       ))}
 
-      <div className="relative flex w-full flex-1 max-w-[1280px] flex-col items-center justify-center gap-6 px-6 mx-auto text-center lg:justify-start lg:pt-[342.62px] lg:px-10">
+      {/* Subtle black overlay for text readability */}
+      <div className="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true" />
+
+      <div className="relative z-10 flex w-full flex-1 max-w-[1280px] flex-col items-center justify-center gap-6 px-6 mx-auto text-center lg:justify-start lg:pt-[342.62px] lg:px-10">
+
         <h1
           className="animate-in fade-in slide-in-from-bottom-4 animation-fill-mode-both mx-auto w-full max-w-[1116px] duration-700 ease-out"
           style={{
@@ -140,7 +144,8 @@ export function HeroCarousel({
       </div>
 
       {images.length > 1 ? (
-        <div className="relative flex shrink-0 justify-center gap-2 pt-4 pb-6" role="tablist" aria-label="Hero slides">
+        <div className="relative z-10 flex shrink-0 justify-center gap-2 pt-4 pb-6" role="tablist" aria-label="Hero slides">
+
           {images.map((image, index) => (
             <button
               key={image.id}
