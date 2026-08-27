@@ -50,8 +50,8 @@ const CATEGORY_CARDS: CategoryCardDef[] = [
     iconSrc: "/assets/icons/icon-category-industrial-laundry.svg",
     iconWidth: 123,
     iconHeight: 94,
-    // Division exists in the DB (inactive, no products yet — see database/seed.ts). This
-    // card only becomes clickable once an admin adds real products and activates it.
+    // Linked whenever this division has DIVISIONS-page spec-table content (division_spec_rows)
+    // — independent of whether it has any Product Catalog products. See database/seed.ts.
     divisionSlug: "industrial-laundry-detergent",
   },
   {
