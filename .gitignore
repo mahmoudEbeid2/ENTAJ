@@ -45,3 +45,9 @@ next-env.d.ts
 /storage/**/*
 !/storage/**/
 !/storage/**/.gitkeep
+
+# seed-referenced division images (database/seed-data/divisions.ts) — must ship with the
+# repo so a fresh deploy's DB migration rows have matching files, not just DB paths
+!/storage/categories/division-animal-nutrition.png
+!/storage/categories/division-water-treatment.png
+!/storage/categories/division-base-oils.png
