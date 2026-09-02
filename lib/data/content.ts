@@ -5,6 +5,7 @@ import {
   divisions,
   products,
   productDocuments,
+  productDivisions,
   divisionSpecRows,
   type ProductDocumentType,
 } from "@/database/schema";
@@ -35,6 +36,22 @@ export async function getCategoryBySlug(slug: string) {
 }
 
 export const getDivisionBySlug = getCategoryBySlug;
+
+/**
+ * Products assigned to a division via the many-to-many product_divisions join table — a
+ * product can appear under more than one division here. This is the source of truth for
+ * the per-division product listing page; it does not read products.divisionId.
+ */
+export async function getProductsByDivisionSlug(slug: string) {
+  return db
+    .select({ product: products })
+    .from(productDivisions)
+    .innerJoin(divisions, eq(productDivisions.divisionId, divisions.id))
+    .innerJoin(products, eq(productDivisions.productId, products.id))
+    .where(and(eq(divisions.slug, slug), eq(products.isActive, true), isNull(products.deletedAt)))
+    .orderBy(asc(products.sortOrder))
+    .then((rows) => rows.map((r) => r.product));
+}
 
 /**
  * Loads categories alongside their specification table rows (independent of Home Divisions

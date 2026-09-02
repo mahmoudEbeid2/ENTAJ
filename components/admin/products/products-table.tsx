@@ -37,10 +37,12 @@ type Division = typeof divisions.$inferSelect;
 export function ProductsTable({
   products: initialProducts,
   divisions: divisionList,
+  divisionIdsByProductId = {},
   documentsByProductId = {},
 }: {
   products: Product[];
   divisions: Division[];
+  divisionIdsByProductId?: Record<number, number[]>;
   documentsByProductId?: Record<number, Partial<Record<ProductDocumentType, ProductDocumentSummary>>>;
 }) {
   const [search, setSearch] = useState("");
@@ -171,6 +173,7 @@ export function ProductsTable({
                       <ProductFormDialog
                         divisions={divisionOptions}
                         product={product}
+                        divisionIds={divisionIdsByProductId[product.id] ?? [product.divisionId]}
                         trigger={
                           <Button variant="ghost" size="icon-sm" aria-label={`Edit ${product.name}`}>
                             <Pencil className="size-4" />

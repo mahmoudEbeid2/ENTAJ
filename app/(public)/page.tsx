@@ -156,7 +156,7 @@ export default async function HomePage() {
                   name={division.name}
                   subtitle={division.subtitle}
                   imageSrc={storageUrl(division.imagePath)}
-                  href={`/divisions#${division.slug}`}
+                  href={`/divisions/${division.slug}`}
                   ctaLabel={division.ctaLabel}
                   valueProps={valueProps}
                 />

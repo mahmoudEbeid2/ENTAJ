@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { admins } from "./auth";
 
 import { homeDivisions } from "./homepage";
-import { categories, divisions, products, productDocuments, divisionSpecRows } from "./content";
+import { categories, divisions, products, productDocuments, divisionSpecRows, productDivisions } from "./content";
 import { contactMessages } from "./contact";
 import { mediaLibrary } from "./media";
 import { blogCategories, blogPosts } from "./cms";
@@ -13,6 +13,7 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
   contactMessages: many(contactMessages),
   specRows: many(divisionSpecRows),
+  productDivisions: many(productDivisions),
 }));
 
 export const divisionsRelations = categoriesRelations;
@@ -22,6 +23,12 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   division: one(divisions, { fields: [products.divisionId], references: [divisions.id] }),
   documents: many(productDocuments),
   specRows: many(divisionSpecRows),
+  productDivisions: many(productDivisions),
+}));
+
+export const productDivisionsRelations = relations(productDivisions, ({ one }) => ({
+  product: one(products, { fields: [productDivisions.productId], references: [products.id] }),
+  division: one(divisions, { fields: [productDivisions.divisionId], references: [divisions.id] }),
 }));
 
 export const divisionSpecRowsRelations = relations(divisionSpecRows, ({ one }) => ({

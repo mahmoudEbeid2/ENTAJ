@@ -95,6 +95,39 @@ export default async function ProductDetailsPage({
                 </p>
               ) : null}
 
+              {product.formula || product.purity ? (
+                <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 font-expanded text-sm">
+                  {product.formula ? (
+                    <div className="flex items-baseline gap-1.5">
+                      <dt className="font-semibold text-entaj-dark-grey">Formula:</dt>
+                      <dd className="text-entaj-medium-grey">{product.formula}</dd>
+                    </div>
+                  ) : null}
+                  {product.purity ? (
+                    <div className="flex items-baseline gap-1.5">
+                      <dt className="font-semibold text-entaj-dark-grey">Purity:</dt>
+                      <dd className="text-entaj-medium-grey">{product.purity}</dd>
+                    </div>
+                  ) : null}
+                </dl>
+              ) : null}
+
+              {product.applications && product.applications.length > 0 ? (
+                <div className="mt-6">
+                  <h2 className="font-expanded text-sm font-semibold tracking-wide text-entaj-dark-grey uppercase">
+                    Applications
+                  </h2>
+                  <ul className="mt-3 flex flex-col gap-2">
+                    {product.applications.map((application) => (
+                      <li key={application} className="flex items-start gap-2 font-expanded text-sm text-entaj-dark-grey">
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-entaj-blue" aria-hidden="true" />
+                        {application}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
               {product.documents.length > 0 ? (
                 <div className="mt-8 border-t border-entaj-blue/10 pt-8">
                   <h2 className="font-expanded text-sm font-semibold tracking-wide text-entaj-dark-grey uppercase">

@@ -1,4 +1,4 @@
-import { boolean, index, int, mysqlEnum, mysqlTable, unique, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, json, mysqlEnum, mysqlTable, primaryKey, unique, varchar } from "drizzle-orm/mysql-core";
 import { softDelete, timestamps } from "./common";
 
 export const categories = mysqlTable("divisions", {
@@ -34,6 +34,11 @@ export const products = mysqlTable(
     spec: varchar("spec", { length: 255 }),
     description: varchar("description", { length: 500 }),
     imagePath: varchar("image_path", { length: 500 }),
+    // Structured content fields, distinct from the free-text `spec` field above (which is
+    // reused for a short grade label, e.g. "Light / Dense", when one is given).
+    formula: varchar("formula", { length: 100 }),
+    purity: varchar("purity", { length: 150 }),
+    applications: json("applications").$type<string[]>(),
     isRecommended: boolean("is_recommended").notNull().default(false),
     isFeatured: boolean("is_featured").notNull().default(false),
     sortOrder: int("sort_order").notNull().default(0),
@@ -45,6 +50,25 @@ export const products = mysqlTable(
   (t) => [
     index("products_division_id_idx").on(t.divisionId),
     index("products_is_recommended_idx").on(t.isRecommended),
+  ],
+);
+
+// Many-to-many product/division membership, additive to the legacy products.divisionId FK
+// (kept as-is for backward compatibility with existing single-division code paths). This
+// join table is the source of truth for "which divisions show this product" going forward.
+export const productDivisions = mysqlTable(
+  "product_divisions",
+  {
+    productId: int("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    divisionId: int("division_id")
+      .notNull()
+      .references(() => divisions.id, { onDelete: "cascade" }),
+  },
+  (t) => [
+    primaryKey({ columns: [t.productId, t.divisionId] }),
+    index("product_divisions_division_id_idx").on(t.divisionId),
   ],
 );
 

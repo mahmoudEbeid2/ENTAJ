@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import { asc, isNull } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { divisions, products, productDocuments } from "@/database/schema";
+import { divisions, products, productDocuments, productDivisions } from "@/database/schema";
 import { ProductsTable } from "@/components/admin/products/products-table";
 
 export const metadata: Metadata = { title: "Products — Entaj Admin" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
-  const [allProducts, allDivisions, allDocuments] = await Promise.all([
+  const [allProducts, allDivisions, allDocuments, allProductDivisions] = await Promise.all([
     db.select().from(products).where(isNull(products.deletedAt)).orderBy(asc(products.name)),
     db.select().from(divisions).where(isNull(divisions.deletedAt)).orderBy(asc(divisions.sortOrder)),
     db.select().from(productDocuments),
+    db.select().from(productDivisions),
   ]);
 
   const documentsByProductId = new Map<number, typeof allDocuments>();
@@ -19,6 +20,13 @@ export default async function AdminProductsPage() {
     const existing = documentsByProductId.get(doc.productId) ?? [];
     existing.push(doc);
     documentsByProductId.set(doc.productId, existing);
+  }
+
+  const divisionIdsByProductId = new Map<number, number[]>();
+  for (const row of allProductDivisions) {
+    const existing = divisionIdsByProductId.get(row.productId) ?? [];
+    existing.push(row.divisionId);
+    divisionIdsByProductId.set(row.productId, existing);
   }
 
   return (
@@ -33,6 +41,7 @@ export default async function AdminProductsPage() {
       <ProductsTable
         products={allProducts}
         divisions={allDivisions}
+        divisionIdsByProductId={Object.fromEntries(divisionIdsByProductId)}
         documentsByProductId={Object.fromEntries(
           [...documentsByProductId.entries()].map(([id, docs]) => [
             id,

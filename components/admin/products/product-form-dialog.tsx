@@ -10,13 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Dialog,
   DialogContent,
   DialogFooter,
@@ -35,10 +28,13 @@ type Product = typeof products.$inferSelect;
 export function ProductFormDialog({
   divisions,
   product,
+  divisionIds: currentDivisionIds,
   trigger,
 }: {
   divisions: { id: number; name: string }[];
   product?: Product;
+  /** The product's current division memberships (from product_divisions). Ignored when adding a new product. */
+  divisionIds?: number[];
   trigger: ReactElement;
 }) {
   const [open, setOpen] = useState(false);
@@ -56,7 +52,7 @@ export function ProductFormDialog({
     defaultValues: product
       ? {
           id: product.id,
-          divisionId: product.divisionId,
+          divisionIds: currentDivisionIds ?? [product.divisionId],
           name: product.name,
           recommendedLabel: product.recommendedLabel ?? "",
           spec: product.spec ?? "",
@@ -73,7 +69,7 @@ export function ProductFormDialog({
     startTransition(async () => {
       const formData = new FormData();
       if (values.id) formData.set("id", String(values.id));
-      formData.set("divisionId", String(values.divisionId));
+      formData.set("divisionIds", JSON.stringify(values.divisionIds));
       formData.set("name", values.name);
       formData.set("recommendedLabel", values.recommendedLabel ?? "");
       formData.set("spec", values.spec ?? "");
@@ -111,33 +107,31 @@ export function ProductFormDialog({
           </Field>
 
           <Field>
-            <FieldLabel>Division</FieldLabel>
+            <FieldLabel>Divisions</FieldLabel>
             <Controller
               control={control}
-              name="divisionId"
+              name="divisionIds"
               render={({ field }) => (
-                <Select
-                  value={field.value ? String(field.value) : undefined}
-                  onValueChange={(v) => field.onChange(Number(v))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a division">
-                      {(value: string | null) =>
-                        divisions.find((d) => String(d.id) === value)?.name ?? "Select a division"
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {divisions.map((d) => (
-                      <SelectItem key={d.id} value={String(d.id)}>
+                <div className="flex flex-col gap-2 rounded-lg border p-3">
+                  {divisions.map((d) => {
+                    const checked = (field.value ?? []).includes(d.id);
+                    return (
+                      <label key={d.id} className="flex items-center justify-between gap-2 text-sm">
                         {d.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                        <Switch
+                          checked={checked}
+                          onCheckedChange={(next) => {
+                            const current = field.value ?? [];
+                            field.onChange(next ? [...current, d.id] : current.filter((id) => id !== d.id));
+                          }}
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
               )}
             />
-            <FieldError>{errors.divisionId?.message}</FieldError>
+            <FieldError>{errors.divisionIds?.message}</FieldError>
           </Field>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

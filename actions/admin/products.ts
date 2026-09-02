@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { products, activityLogs } from "@/database/schema";
+import { products, activityLogs, productDivisions } from "@/database/schema";
 import { saveUpload } from "@/lib/storage/upload-service";
 import { getSession } from "@/lib/auth/session";
 import { productFormSchema } from "@/features/admin/products/schema";
@@ -20,9 +20,15 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
   }
 
   const idRaw = formData.get("id");
+  let divisionIds: number[] = [];
+  try {
+    divisionIds = JSON.parse(String(formData.get("divisionIds") ?? "[]")).map(Number);
+  } catch {
+    divisionIds = [];
+  }
   const parsed = productFormSchema.safeParse({
     id: idRaw ? Number(idRaw) : undefined,
-    divisionId: Number(formData.get("divisionId")),
+    divisionIds,
     name: formData.get("name"),
     recommendedLabel: formData.get("recommendedLabel"),
     spec: formData.get("spec"),
@@ -37,7 +43,7 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
     return { success: false, error: parsed.error.issues[0]?.message ?? "Please check the form." };
   }
 
-  const { id, ...values } = parsed.data;
+  const { id, divisionIds: targetDivisionIds, ...values } = parsed.data;
   const imageFile = formData.get("image");
 
   try {
@@ -62,27 +68,40 @@ export async function saveProduct(formData: FormData): Promise<ProductActionResu
 
     const values2 = {
       ...values,
+      // The legacy single-division column is kept in sync with the first selected
+      // division for backward compatibility with any code path that still reads it —
+      // product_divisions (set below) is the source of truth for all memberships.
+      divisionId: targetDivisionIds[0],
       recommendedLabel: values.recommendedLabel || null,
       spec: values.spec || null,
       description: values.description || null,
     };
 
+    let productId: number;
     if (id) {
       await db
         .update(products)
         .set({ ...values2, ...(imagePath ? { imagePath } : {}) })
         .where(eq(products.id, id));
       await logActivity(session.adminId, "updated", "product", id);
+      productId = id;
     } else {
       const [inserted] = await db
         .insert(products)
         .values({ ...values2, imagePath: imagePath ?? null })
         .$returningId();
       await logActivity(session.adminId, "created", "product", inserted?.id);
+      productId = inserted!.id;
     }
+
+    await db.delete(productDivisions).where(eq(productDivisions.productId, productId));
+    await db
+      .insert(productDivisions)
+      .values(targetDivisionIds.map((divisionId) => ({ productId, divisionId })));
 
     revalidatePath("/admin/products");
     revalidatePath("/divisions");
+    revalidatePath("/divisions/[slug]", "page");
     return { success: true };
   } catch {
     return { success: false, error: "Something went wrong while saving the product." };
@@ -103,6 +122,7 @@ export async function deleteProduct(id: number): Promise<ProductActionResult> {
     await logActivity(session.adminId, "deleted", "product", id);
     revalidatePath("/admin/products");
     revalidatePath("/divisions");
+    revalidatePath("/divisions/[slug]", "page");
     return { success: true };
   } catch {
     return { success: false, error: "Could not delete this product." };
