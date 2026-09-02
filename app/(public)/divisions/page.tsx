@@ -47,43 +47,43 @@ export default async function DivisionsPage() {
         <PageHero title={hero.title} imageSrc={storageUrl(hero.imagePath) ?? ""} imageAlt={hero.title} size="compact" />
       ) : null}
 
-      {categories.length > 0 ? (
-        <Section className="pt-8 pb-0 lg:pt-12">
-          <Container>
-            <Reveal>
-              <GradientHeading as="h2" className="mb-8 text-center text-3xl lg:text-[36px]">
-                OUR CATEGORIES
-              </GradientHeading>
-              <CategoryNav
-                availableDivisionSlugs={categories.map((category) => category.slug)}
-              />
-            </Reveal>
-          </Container>
-        </Section>
-      ) : null}
-
-      {recommended.length > 0 ? (
-        <Section>
-          <Container>
-            <Reveal>
-              {productsIntro?.heading ? (
-                <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
-                  {productsIntro.heading}
-                </GradientHeading>
-              ) : null}
-              <p className="text-gradient-entaj mb-6 font-sans text-2xl font-bold lg:text-[28px]">Recommended</p>
-            </Reveal>
-            <RecommendedGrid
-              products={recommended.map((product) => ({
-                id: product.id,
-                name: product.recommendedLabel ?? product.name,
-                imageSrc: storageUrl(product.imagePath),
-                featured: product.isFeatured,
-              }))}
+      {/* Always rendered regardless of active-division count: CategoryNav hardcodes all 5
+          category cards and shows unlinked cards for any slug with no active division. */}
+      <Section className="pt-8 pb-0 lg:pt-12">
+        <Container>
+          <Reveal>
+            <GradientHeading as="h2" className="mb-8 text-center text-3xl lg:text-[36px]">
+              OUR CATEGORIES
+            </GradientHeading>
+            <CategoryNav
+              availableDivisionSlugs={categories.map((category) => category.slug)}
             />
-          </Container>
-        </Section>
-      ) : null}
+          </Reveal>
+        </Container>
+      </Section>
+
+      {/* Always rendered regardless of recommended-product count: shows an empty grid when
+          there are no active recommended products rather than hiding the whole section. */}
+      <Section>
+        <Container>
+          <Reveal>
+            {productsIntro?.heading ? (
+              <GradientHeading as="h2" className="mb-8 text-center text-4xl lg:text-[48px]">
+                {productsIntro.heading}
+              </GradientHeading>
+            ) : null}
+            <p className="text-gradient-entaj mb-6 font-sans text-2xl font-bold lg:text-[28px]">Recommended</p>
+          </Reveal>
+          <RecommendedGrid
+            products={recommended.map((product) => ({
+              id: product.id,
+              name: product.recommendedLabel ?? product.name,
+              imageSrc: storageUrl(product.imagePath),
+              featured: product.isFeatured,
+            }))}
+          />
+        </Container>
+      </Section>
 
       {specTables
         .filter((table) => table.specRows && table.specRows.length > 0)
