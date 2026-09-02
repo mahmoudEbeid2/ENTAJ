@@ -94,7 +94,7 @@ export default async function AboutPage() {
                 <div className="flex items-center gap-3">
                   <span className="font-expanded text-lg text-entaj-dark-grey">{String(index + 1).padStart(2, "0")}</span>
                   {prop.aboutIconPath ? (
-                    <Image src={prop.aboutIconPath} alt="" width={40} height={40} className="size-9" aria-hidden="true" />
+                    <Image src={storageUrl(prop.aboutIconPath)!} alt="" width={40} height={40} className="size-9" aria-hidden="true" />
                   ) : null}
                 </div>
                 <h3 className="mt-2 font-expanded text-lg font-bold text-entaj-dark-grey">

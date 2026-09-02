@@ -132,7 +132,7 @@ export default async function HomePage() {
                     id: prop.id,
                     title: prop.title,
                     description: prop.description,
-                    iconSrc: prop.homeIconPath,
+                    iconSrc: storageUrl(prop.homeIconPath),
                   }))}
                 />
               </Reveal>
