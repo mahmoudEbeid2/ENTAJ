@@ -12,6 +12,13 @@ import { RecommendedGrid } from "@/components/features/divisions/recommended-gri
 import { CategoryNav } from "@/components/features/divisions/category-nav";
 import { Reveal } from "@/components/ui/reveal";
 
+// This page is statically generated with no time-based revalidation by default (see
+// .next/prerender-manifest.json: initialRevalidateSeconds was false before this was added),
+// so database changes to divisions/products/spec rows only appeared after an admin action
+// explicitly called revalidatePath("/divisions") or a full rebuild. ISR here means any
+// future DB change shows up within 60s without either of those.
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoMeta("divisions");
   if (!seo) return {};
