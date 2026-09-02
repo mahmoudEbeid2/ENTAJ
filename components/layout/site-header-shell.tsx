@@ -17,10 +17,13 @@ export function SiteHeaderShell({
   siteName: string;
 }) {
   const pathname = usePathname();
-  // Product Details / Document pages don't carry a full photographic marketing hero for the
-  // transparent nav to sit on — they get a strong standalone header instead. Scoped to this
-  // route prefix only, so Home/About/Contact/Divisions keep their existing hero-integrated nav.
-  const isInternal = pathname.startsWith("/products");
+  // Product Details / Document pages, and per-division product listing pages, don't carry a
+  // full photographic marketing hero for the transparent nav to sit on — they get a strong
+  // standalone header instead, same as Product Details. Scoped to these route prefixes only,
+  // so Home/About/Contact/the main Divisions page keep their existing hero-integrated nav.
+  // "/divisions/" (with trailing slash) deliberately excludes the bare "/divisions" page,
+  // which does have a hero and should keep the transparent nav.
+  const isInternal = pathname.startsWith("/products") || pathname.startsWith("/divisions/");
 
   return (
     <header
