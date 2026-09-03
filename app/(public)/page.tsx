@@ -85,7 +85,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {stats.map((stat, index) => (
               <Reveal key={stat.id} delay={index * 80}>
-                <StatBlock value={stat.value} label={stat.label} iconSrc={stat.iconPath} />
+                <StatBlock value={stat.value} label={stat.label} iconSrc={storageUrl(stat.iconPath)} />
               </Reveal>
             ))}
           </div>
@@ -107,7 +107,7 @@ export default async function HomePage() {
                 body={aboutSummary.body ?? ""}
                 imageSrc={storageUrl(aboutSummary.imagePath) ?? ""}
                 imageAlt="ENTAJ headquarters"
-                blobSrc={(aboutSummary.extra as { decorativeBlobPath?: string } | null)?.decorativeBlobPath}
+                blobSrc={storageUrl((aboutSummary.extra as { decorativeBlobPath?: string } | null)?.decorativeBlobPath)}
               />
             </Reveal>
             <div className="mx-auto mt-10 h-px w-full max-w-[543px] bg-entaj-medium-grey/30" aria-hidden="true" />
@@ -227,7 +227,7 @@ export default async function HomePage() {
                 variant={qualityPanel.variant}
                 heading={qualityPanel.heading}
                 body={qualityPanel.body}
-                illustrationSrc={qualityPanel.iconPath}
+                illustrationSrc={storageUrl(qualityPanel.iconPath)}
               />
             </Reveal>
           ) : null}

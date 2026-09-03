@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { storageUrl } from "@/lib/utils/asset-url";
 
 export interface ContactOffice {
   id: number;
@@ -75,7 +76,7 @@ export function ContactInfoCard({
             <div key={office.id} className="flex flex-col items-center gap-2 px-8 text-center">
               {office.flagIconPath ? (
                 <Image
-                  src={office.flagIconPath}
+                  src={storageUrl(office.flagIconPath)!}
                   alt=""
                   width={40}
                   height={28}

@@ -72,7 +72,7 @@ export default async function AboutPage() {
                   <p className="text-entaj-dark-grey leading-relaxed lg:text-lg">{story.body}</p>
                 </Reveal>
                 <Reveal delay={120}>
-                  <StatTimeline items={timelineStats} linePath={extra.timelineLinePath} dotPath={extra.timelineDotPath} />
+                  <StatTimeline items={timelineStats} linePath={storageUrl(extra.timelineLinePath)} dotPath={storageUrl(extra.timelineDotPath)} />
                 </Reveal>
               </div>
             ) : null}
