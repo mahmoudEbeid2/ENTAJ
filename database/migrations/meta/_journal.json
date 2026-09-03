@@ -92,6 +92,13 @@
       "when": 1788383051849,
       "tag": "0012_steady_microbe",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1788466770781,
+      "tag": "0013_add_categories_sort_order_index",
+      "breakpoints": true
     }
   ]
 }

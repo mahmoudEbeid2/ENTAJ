@@ -138,6 +138,49 @@ export async function deleteCategory(id: number): Promise<CategoryActionResult> 
   }
 }
 
+/**
+ * Persists a full drag-and-drop reorder from the admin Categories table. Takes the complete
+ * ordered id list (not a single moved item) so there is no drift between client and server
+ * state, and rejects anything that isn't exactly the full non-deleted category set — e.g. a
+ * partial list produced while a search/filter box was narrowing the visible rows — instead of
+ * silently dropping the filtered-out rows from the ordering.
+ */
+export async function reorderCategories(orderedIds: number[]): Promise<CategoryActionResult> {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Your session has expired. Please sign in again." };
+  }
+
+  if (!Array.isArray(orderedIds) || orderedIds.length === 0 || orderedIds.some((id) => !Number.isInteger(id))) {
+    return { success: false, error: "Invalid order." };
+  }
+
+  try {
+    const existing = await db.select({ id: categories.id }).from(categories).where(isNull(categories.deletedAt));
+    const existingIds = new Set(existing.map((row) => row.id));
+    const incomingIds = new Set(orderedIds);
+    const isCompleteMatch =
+      existingIds.size === incomingIds.size && [...existingIds].every((id) => incomingIds.has(id));
+    if (!isCompleteMatch) {
+      return { success: false, error: "Reorder list must include every category — try again." };
+    }
+
+    await db.transaction(async (tx) => {
+      for (let i = 0; i < orderedIds.length; i++) {
+        await tx.update(categories).set({ sortOrder: i }).where(eq(categories.id, orderedIds[i]));
+      }
+    });
+    await logActivity(session.adminId, "reordered", "category");
+
+    revalidatePath("/admin/categories");
+    revalidatePath("/", "layout");
+    revalidatePath("/divisions");
+    return { success: true };
+  } catch {
+    return { success: false, error: "Something went wrong while saving the new order." };
+  }
+}
+
 async function logActivity(adminId: number, action: string, entityType: string, entityId?: number) {
   await db.insert(activityLogs).values({ adminId, action, entityType, entityId: entityId ?? null });
 }

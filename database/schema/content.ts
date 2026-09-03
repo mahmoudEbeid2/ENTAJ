@@ -1,23 +1,27 @@
 import { boolean, index, int, json, mysqlEnum, mysqlTable, primaryKey, unique, varchar } from "drizzle-orm/mysql-core";
 import { softDelete, timestamps } from "./common";
 
-export const categories = mysqlTable("divisions", {
-  id: int("id").autoincrement().primaryKey(),
-  slug: varchar("slug", { length: 150 }).notNull().unique(),
-  name: varchar("name", { length: 255 }).notNull(),
-  shortName: varchar("short_name", { length: 100 }),
-  subtitle: varchar("subtitle", { length: 255 }),
-  numeral: varchar("numeral", { length: 20 }),
-  description: varchar("description", { length: 1000 }),
-  imagePath: varchar("image_path", { length: 500 }),
-  iconPath: varchar("icon_path", { length: 500 }),
-  bgColor: varchar("bg_color", { length: 50 }),
-  ctaLabel: varchar("cta_label", { length: 100 }).default("GO TO PRODUCTS"),
-  sortOrder: int("sort_order").notNull().default(0),
-  isActive: boolean("is_active").notNull().default(true),
-  ...timestamps,
-  ...softDelete,
-});
+export const categories = mysqlTable(
+  "divisions",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    slug: varchar("slug", { length: 150 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
+    shortName: varchar("short_name", { length: 100 }),
+    subtitle: varchar("subtitle", { length: 255 }),
+    numeral: varchar("numeral", { length: 20 }),
+    description: varchar("description", { length: 1000 }),
+    imagePath: varchar("image_path", { length: 500 }),
+    iconPath: varchar("icon_path", { length: 500 }),
+    bgColor: varchar("bg_color", { length: 50 }),
+    ctaLabel: varchar("cta_label", { length: 100 }).default("GO TO PRODUCTS"),
+    sortOrder: int("sort_order").notNull().default(0),
+    isActive: boolean("is_active").notNull().default(true),
+    ...timestamps,
+    ...softDelete,
+  },
+  (t) => [index("categories_sort_order_idx").on(t.sortOrder)],
+);
 
 export const divisions = categories;
 

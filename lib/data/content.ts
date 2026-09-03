@@ -15,7 +15,7 @@ export async function getCategories() {
     .select()
     .from(categories)
     .where(and(eq(categories.isActive, true), isNull(categories.deletedAt)))
-    .orderBy(asc(categories.sortOrder));
+    .orderBy(asc(categories.sortOrder), asc(categories.name));
 }
 
 export const getDivisions = getCategories;

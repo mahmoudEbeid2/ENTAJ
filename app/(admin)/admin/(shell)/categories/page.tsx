@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminCategoriesPage() {
   const [allCategories, productCounts, specRowCounts] = await Promise.all([
-    db.select().from(categories).where(isNull(categories.deletedAt)).orderBy(asc(categories.sortOrder)),
+    db.select().from(categories).where(isNull(categories.deletedAt)).orderBy(asc(categories.sortOrder), asc(categories.name)),
     db
       .select({ categoryId: products.divisionId, value: count() })
       .from(products)
