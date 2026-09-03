@@ -146,7 +146,7 @@ export default async function HomePage() {
         <Container>
           <Reveal>
             <GradientHeading as="h2" className="mb-12 text-center text-5xl font-thin leading-none sm:text-7xl lg:text-[96px]">
-              Other Categories
+              DIVISIONS
             </GradientHeading>
           </Reveal>
           <CategoryNav
