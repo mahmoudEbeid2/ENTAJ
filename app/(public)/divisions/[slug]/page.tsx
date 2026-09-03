@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { GradientHeading } from "@/components/ui/gradient-heading";
 import { ProductCard } from "@/components/ui/product-card";
+import { EmptyProductsState } from "@/components/ui/empty-products-state";
 import { Reveal } from "@/components/ui/reveal";
 import { PageBreadcrumb } from "@/components/layout/page-breadcrumb";
 
@@ -78,9 +79,9 @@ export default async function DivisionProductsPage({
               ))}
             </div>
           ) : (
-            <p className="mt-12 text-center font-expanded text-entaj-medium-grey">
-              Products coming soon.
-            </p>
+            <Reveal variant="scale">
+              <EmptyProductsState />
+            </Reveal>
           )}
         </Container>
       </Section>

@@ -196,6 +196,36 @@
   animation: bounce-dot 1.2s ease-in-out infinite;
 }
 
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@utility animate-float-soft {
+  animation: float-soft 3.2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.12;
+  }
+}
+
+@utility animate-pulse-ring {
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
 @utility scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -215,7 +245,9 @@
   }
 
   .animate-float-orb,
-  .animate-bounce-dot {
+  .animate-bounce-dot,
+  .animate-float-soft,
+  .animate-pulse-ring {
     animation: none !important;
   }
 }

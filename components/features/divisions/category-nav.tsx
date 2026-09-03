@@ -50,9 +50,22 @@ function useReducedMotion() {
   return reduced;
 }
 
-function CategoryCard({ category, widthPercent }: { category: CategoryCardData; widthPercent: number }) {
+/**
+ * Fixed at 2 cards per view on mobile, 3 from sm, 5 from lg — a plain CSS breakpoint match to
+ * useVisibleCount() below (each fraction is exactly 100/visibleCount, e.g. 1/5 = 20%, so the
+ * JS-computed translate step in CategoryNav lines up with the real rendered card width). Card
+ * width is intentionally driven by these Tailwind classes, not by useVisibleCount()'s JS
+ * state: that state defaults to 2 until its effect runs after mount, so sizing cards from it
+ * directly let a card render at the wrong width for a frame (visible as inconsistent card
+ * sizes on load). CSS breakpoints apply at first paint, every time — the visual gap between
+ * cards comes from the padding below, inset within each fixed-fraction slot, not from
+ * shrinking the slot itself.
+ */
+const CARD_WIDTH_CLASSNAME = "w-1/2 sm:w-1/3 lg:w-1/5";
+
+function CategoryCard({ category }: { category: CategoryCardData }) {
   return (
-    <div className="shrink-0 px-2 sm:px-2.5 lg:px-3" style={{ width: `${widthPercent}%` }}>
+    <div className={cn("shrink-0 px-2 sm:px-2.5 lg:px-3", CARD_WIDTH_CLASSNAME)}>
       <Link
         href={`/divisions/${category.slug}`}
         style={{ backgroundColor: category.bgColor || "#EDEDED" }}
@@ -256,7 +269,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
     return (
       <div className="-mx-2 flex flex-wrap sm:-mx-2.5 lg:-mx-3">
         {categories.map((category) => (
-          <CategoryCard key={category.id} category={category} widthPercent={widthPercent} />
+          <CategoryCard key={category.id} category={category} />
         ))}
       </div>
     );
@@ -293,7 +306,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
           }}
         >
           {extended.map((category, i) => (
-            <CategoryCard key={`${category.id}-${i}`} category={category} widthPercent={widthPercent} />
+            <CategoryCard key={`${category.id}-${i}`} category={category} />
           ))}
         </div>
       </div>
