@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { getCtaPanel, getHomeDivisions, getMarketRegions, getPageSection, getStats, getValueProps, getWhyUsFeatures, getHeroSlides } from "@/lib/data/home";
+import { getCtaPanel, getMarketRegions, getPageSection, getStats, getValueProps, getWhyUsFeatures, getHeroSlides } from "@/lib/data/home";
+import { getCategories } from "@/lib/data/content";
 import { getOffices, getSeoMeta, getSiteSettings } from "@/lib/data/site";
 import { storageUrl } from "@/lib/utils/asset-url";
 import { Container } from "@/components/ui/container";
@@ -11,7 +12,7 @@ import { HeroCarousel } from "@/components/features/home/hero-carousel";
 import { AboutShowcase } from "@/components/features/home/about-showcase";
 import { WhyEntajBanner } from "@/components/features/home/why-entaj-banner";
 import { StatBlock } from "@/components/ui/stat-block";
-import { DivisionCard } from "@/components/ui/division-card";
+import { CategoryNav } from "@/components/features/divisions/category-nav";
 import { WhyUsCard } from "@/components/ui/why-us-card";
 import { RegionBlock } from "@/components/ui/region-block";
 import { CtaPanel } from "@/components/ui/cta-panel";
@@ -34,7 +35,7 @@ export default async function HomePage() {
     stats,
     aboutSummary,
     valueProps,
-    divisions,
+    categories,
     whatSetsApart,
     whyEntajIntro,
     whyUsFeatures,
@@ -48,7 +49,7 @@ export default async function HomePage() {
     getStats("home", "counter"),
     getPageSection("home", "about_summary"),
     getValueProps(),
-    getHomeDivisions(),
+    getCategories(),
     getPageSection("home", "what_sets_apart"),
     getPageSection("home", "why_entaj_intro"),
     getWhyUsFeatures(),
@@ -148,21 +149,16 @@ export default async function HomePage() {
               Divisions
             </GradientHeading>
           </Reveal>
-          <div className="flex flex-col gap-10">
-            {divisions.map((division, index) => (
-              <Reveal key={division.id} delay={index * 100}>
-                <DivisionCard
-                  numeral={division.numeral}
-                  name={division.name}
-                  subtitle={division.subtitle}
-                  imageSrc={storageUrl(division.imagePath)}
-                  href={`/divisions/${division.slug}`}
-                  ctaLabel={division.ctaLabel}
-                  valueProps={valueProps}
-                />
-              </Reveal>
-            ))}
-          </div>
+          <CategoryNav
+            categories={categories.map((category) => ({
+              id: category.id,
+              slug: category.slug,
+              name: category.name,
+              tagline: category.subtitle,
+              bgColor: category.bgColor,
+              iconSrc: storageUrl(category.iconPath),
+            }))}
+          />
         </Container>
       </Section>
 

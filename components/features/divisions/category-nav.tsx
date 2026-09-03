@@ -17,6 +17,7 @@ export interface CategoryCardData {
   id: number;
   slug: string;
   name: string;
+  tagline?: string | null;
   bgColor: string | null;
   iconSrc: string | null;
 }
@@ -72,10 +73,13 @@ function CategoryCard({ category, widthPercent }: { category: CategoryCardData; 
             />
           ) : null}
         </div>
-        <div className="flex flex-1 items-end justify-center px-2 pt-3 sm:pt-4">
-          <span className="font-expanded text-center text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
+        <div className="flex flex-1 flex-col items-center justify-end gap-1 px-2 pt-3 text-center sm:pt-4">
+          <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
             {category.name}
           </span>
+          {category.tagline ? (
+            <span className="font-sans text-[11px] leading-snug text-[#2F2F2F]/70 sm:text-xs">{category.tagline}</span>
+          ) : null}
         </div>
       </Link>
     </div>

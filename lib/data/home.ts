@@ -1,25 +1,7 @@
-import { and, asc, eq, isNull } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import {
-  ctaPanels,
-  heroSlides,
-  homeDivisions,
-  marketRegions,
-  pageSections,
-  stats,
-  valueProps,
-  whyUsFeatures,
-} from "@/database/schema";
+import { ctaPanels, heroSlides, marketRegions, pageSections, stats, valueProps, whyUsFeatures } from "@/database/schema";
 import type { PageSlug } from "@/database/schema";
-
-export async function getHomeDivisions() {
-  return db
-    .select()
-    .from(homeDivisions)
-    .where(and(eq(homeDivisions.isActive, true), isNull(homeDivisions.deletedAt)))
-    .orderBy(asc(homeDivisions.sortOrder));
-}
-
 
 export async function getHeroSlides(page: PageSlug) {
   return db
