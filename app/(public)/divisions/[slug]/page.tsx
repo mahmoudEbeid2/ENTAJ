@@ -79,7 +79,7 @@ export default async function DivisionProductsPage({
             </div>
           ) : (
             <p className="mt-12 text-center font-expanded text-entaj-medium-grey">
-              No products are currently listed under this division.
+              Products coming soon.
             </p>
           )}
         </Container>
