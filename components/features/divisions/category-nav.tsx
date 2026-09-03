@@ -17,7 +17,6 @@ export interface CategoryCardData {
   id: number;
   slug: string;
   name: string;
-  tagline?: string | null;
   bgColor: string | null;
   iconSrc: string | null;
 }
@@ -57,10 +56,10 @@ function CategoryCard({ category, widthPercent }: { category: CategoryCardData; 
       <Link
         href={`/divisions/${category.slug}`}
         style={{ backgroundColor: category.bgColor || "#EDEDED" }}
-        className="flex min-h-[180px] flex-col rounded-3xl pt-6 pb-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:pt-8 sm:pb-6 lg:min-h-[228px]"
+        className="flex min-h-[180px] flex-col items-center justify-center gap-4 rounded-3xl px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
         draggable={false}
       >
-        <div className="relative mx-auto aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
+        <div className="relative aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
           {category.iconSrc ? (
             <Image
               src={category.iconSrc}
@@ -73,14 +72,9 @@ function CategoryCard({ category, widthPercent }: { category: CategoryCardData; 
             />
           ) : null}
         </div>
-        <div className="flex flex-1 flex-col items-center justify-end gap-1 px-2 pt-3 text-center sm:pt-4">
-          <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
-            {category.name}
-          </span>
-          {category.tagline ? (
-            <span className="font-sans text-[11px] leading-snug text-[#2F2F2F]/70 sm:text-xs">{category.tagline}</span>
-          ) : null}
-        </div>
+        <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
+          {category.name}
+        </span>
       </Link>
     </div>
   );

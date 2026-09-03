@@ -61,7 +61,6 @@ export default async function DivisionsPage() {
                 id: category.id,
                 slug: category.slug,
                 name: category.name,
-                tagline: category.subtitle,
                 bgColor: category.bgColor,
                 iconSrc: storageUrl(category.iconPath),
               }))}

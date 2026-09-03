@@ -146,7 +146,7 @@ export default async function HomePage() {
         <Container>
           <Reveal>
             <GradientHeading as="h2" className="mb-12 text-center text-5xl font-thin leading-none sm:text-7xl lg:text-[96px]">
-              Divisions
+              Other Categories
             </GradientHeading>
           </Reveal>
           <CategoryNav
@@ -154,7 +154,6 @@ export default async function HomePage() {
               id: category.id,
               slug: category.slug,
               name: category.name,
-              tagline: category.subtitle,
               bgColor: category.bgColor,
               iconSrc: storageUrl(category.iconPath),
             }))}
