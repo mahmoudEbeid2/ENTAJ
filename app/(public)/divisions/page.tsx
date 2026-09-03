@@ -47,8 +47,9 @@ export default async function DivisionsPage() {
         <PageHero title={hero.title} imageSrc={storageUrl(hero.imagePath) ?? ""} imageAlt={hero.title} size="compact" />
       ) : null}
 
-      {/* Always rendered regardless of active-division count: CategoryNav hardcodes all 5
-          category cards and shows unlinked cards for any slug with no active division. */}
+      {/* Always rendered regardless of active-category count: every category created in the
+          admin dashboard shows here, even with zero products, since CategoryNav now renders
+          straight from the categories table instead of a hardcoded card list. */}
       <Section className="pt-8 pb-0 lg:pt-12">
         <Container>
           <Reveal>
@@ -56,7 +57,13 @@ export default async function DivisionsPage() {
               OUR CATEGORIES
             </GradientHeading>
             <CategoryNav
-              availableDivisionSlugs={categories.map((category) => category.slug)}
+              categories={categories.map((category) => ({
+                id: category.id,
+                slug: category.slug,
+                name: category.name,
+                bgColor: category.bgColor,
+                iconSrc: storageUrl(category.iconPath),
+              }))}
             />
           </Reveal>
         </Container>

@@ -196,6 +196,15 @@
   animation: bounce-dot 1.2s ease-in-out infinite;
 }
 
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Scroll-reveal (components/ui/reveal.tsx): always show content up front when
    motion is unwanted or JS never ran, instead of leaving it permanently hidden. */
 @media (prefers-reduced-motion: reduce) {
