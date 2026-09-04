@@ -32,9 +32,19 @@ npm run db:migrate
 echo "[entrypoint] running seed (no-op if already seeded)..."
 npm run db:seed
 
+# A container killed mid-build (OOM, `docker stop` timeout, a deploy
+# interrupting startup) can leave `.next` with BUILD_ID and page manifests
+# written but a referenced webpack chunk not yet flushed — the app then
+# looks "built" and starts, but 500s the first time it touches that missing
+# chunk (this is what broke Technical Document downloads). Building into a
+# scratch dir and renaming it into place only after `next build` exits 0
+# makes that impossible: `.next` is always either absent or a complete build.
+rm -rf .next.building
 if [ ! -f .next/BUILD_ID ]; then
   echo "[entrypoint] no build found, running next build..."
-  npm run build
+  NEXT_DIST_DIR=.next.building npm run build
+  rm -rf .next
+  mv .next.building .next
 else
   echo "[entrypoint] existing .next build found, skipping build"
 fi
