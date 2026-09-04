@@ -69,7 +69,7 @@ function CategoryCard({ category }: { category: CategoryCardData }) {
       <Link
         href={`/divisions/${category.slug}`}
         style={{ backgroundColor: category.bgColor || "#EDEDED" }}
-        className="flex min-h-[180px] flex-col items-center justify-center gap-4 rounded-3xl px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
+        className="flex h-full min-h-[180px] flex-col items-center justify-center gap-4 rounded-3xl px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
         draggable={false}
       >
         <div className="relative aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
