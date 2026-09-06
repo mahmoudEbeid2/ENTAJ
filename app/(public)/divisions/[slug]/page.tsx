@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCategories, getCategoryBySlug, getProductsByDivisionSlug } from "@/lib/data/content";
+import {
+  getCategories,
+  getCategoryBySlug,
+  getProductsByDivisionSlug,
+  getSpecRowsByDivisionId,
+} from "@/lib/data/content";
 import { storageUrl } from "@/lib/utils/asset-url";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
@@ -10,6 +15,7 @@ import { EmptyProductsState } from "@/components/ui/empty-products-state";
 import { Reveal } from "@/components/ui/reveal";
 import { PageBreadcrumb } from "@/components/layout/page-breadcrumb";
 import { CategoryThemeSync } from "@/components/layout/category-theme-context";
+import { ProductCategoriesList } from "@/components/features/divisions/product-categories-list";
 
 // Same ISR pattern as /divisions: no rebuild needed for future division/product changes to
 // show up here — see app/(public)/divisions/page.tsx for the full explanation.
@@ -43,7 +49,10 @@ export default async function DivisionProductsPage({
   const division = await getCategoryBySlug(slug);
   if (!division) notFound();
 
-  const divisionProducts = await getProductsByDivisionSlug(slug);
+  const [divisionProducts, specRows] = await Promise.all([
+    getProductsByDivisionSlug(slug),
+    getSpecRowsByDivisionId(division.id),
+  ]);
 
   return (
     <>
@@ -91,6 +100,19 @@ export default async function DivisionProductsPage({
           )}
         </Container>
       </Section>
+
+      {specRows.length > 0 ? (
+        <Section className="pt-0 pb-10 lg:pb-16">
+          <Container>
+            <Reveal>
+              <GradientHeading as="h2" className="mb-6 text-2xl lg:text-[32px]">
+                Product Categories
+              </GradientHeading>
+              <ProductCategoriesList rows={specRows} />
+            </Reveal>
+          </Container>
+        </Section>
+      ) : null}
     </>
   );
 }

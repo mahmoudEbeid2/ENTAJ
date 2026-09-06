@@ -73,6 +73,14 @@ export async function getCategorySpecTables() {
 
 export const getDivisionsWithSpecRows = getCategorySpecTables;
 
+export async function getSpecRowsByDivisionId(divisionId: number) {
+  return db
+    .select()
+    .from(divisionSpecRows)
+    .where(and(eq(divisionSpecRows.divisionId, divisionId), eq(divisionSpecRows.isActive, true)))
+    .orderBy(asc(divisionSpecRows.sortOrder));
+}
+
 
 export async function getRecommendedProducts() {
   return db
