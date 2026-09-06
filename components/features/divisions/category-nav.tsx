@@ -254,7 +254,6 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
       dragStartXRef.current = event.clientX;
       dragStartPositionRef.current = position.get();
       setIsDragging(true);
-      event.currentTarget.setPointerCapture(event.pointerId);
     },
     [position],
   );
@@ -264,7 +263,17 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
       const startX = dragStartXRef.current;
       if (startX === null || cardWidth === 0) return;
       const deltaPx = event.clientX - startX;
-      if (Math.abs(deltaPx) > SWIPE_THRESHOLD_PX / 2) suppressClickRef.current = true;
+      if (Math.abs(deltaPx) > SWIPE_THRESHOLD_PX / 2) {
+        suppressClickRef.current = true;
+        // Pointer capture is deferred until movement actually clears the swipe threshold —
+        // capturing on every pointerdown (even a plain tap) retargets the resulting click to
+        // this track div instead of the CategoryCard <a> under the pointer, which silently
+        // swallows navigation on tap in browsers that implement pointer capture's click
+        // retargeting (e.g. Chromium).
+        if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }
+      }
       position.set(dragStartPositionRef.current - deltaPx / cardWidth);
     },
     [cardWidth, position],
