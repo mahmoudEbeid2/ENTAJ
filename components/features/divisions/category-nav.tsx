@@ -63,31 +63,44 @@ function useElementWidth<T extends HTMLElement>() {
   return [ref, width] as const;
 }
 
+/** Every card gets the same gentle wave carved into its own top/bottom edges — a shape that
+ * belongs to the card itself, not to where it happens to sit in the carousel. Defined once per
+ * card instance in objectBoundingBox units so it scales to that card's own box at any breakpoint. */
 function CategoryCard({ category }: { category: CategoryCardData }) {
+  const clipId = useId();
   return (
-    <Link
-      href={`/divisions/${category.slug}`}
-      style={{ backgroundColor: category.bgColor || "#EDEDED" }}
-      className="flex h-full min-h-[180px] flex-col items-center justify-center gap-4 rounded-3xl px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
-      draggable={false}
-    >
-      <div className="relative aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
-        {category.iconSrc ? (
-          <Image
-            src={category.iconSrc}
-            alt=""
-            fill
-            sizes="160px"
-            className="pointer-events-none object-contain"
-            aria-hidden="true"
-            draggable={false}
-          />
-        ) : null}
-      </div>
-      <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
-        {category.name}
-      </span>
-    </Link>
+    <div className="relative h-full">
+      <svg width={0} height={0} aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id={clipId} clipPathUnits="objectBoundingBox">
+            <path d="M0,0.08 C0.3,0 0.7,0.05 1,0.02 L1,0.95 C0.7,1 0.3,0.93 0,0.98 Z" />
+          </clipPath>
+        </defs>
+      </svg>
+      <Link
+        href={`/divisions/${category.slug}`}
+        style={{ backgroundColor: category.bgColor || "#EDEDED", clipPath: `url(#${clipId})` }}
+        className="flex h-full min-h-[180px] flex-col items-center justify-center gap-4 px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
+        draggable={false}
+      >
+        <div className="relative aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
+          {category.iconSrc ? (
+            <Image
+              src={category.iconSrc}
+              alt=""
+              fill
+              sizes="160px"
+              className="pointer-events-none object-contain"
+              aria-hidden="true"
+              draggable={false}
+            />
+          ) : null}
+        </div>
+        <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
+          {category.name}
+        </span>
+      </Link>
+    </div>
   );
 }
 
@@ -141,10 +154,10 @@ function ConveyorCard({
  * every animation frame (a slow drift, not a tick); buttons, keyboard and drag all move the
  * same value with spring easing (or live 1:1 tracking while dragging) instead of jumping.
  *
- * The curved/panoramic feel comes entirely from a single SVG clip-path applied to the track's
- * outer viewport — a shallow wave along the top and bottom edges — not from any per-card
- * transform. Cards stay flat rectangles and are simply cropped by that shared curved window as
- * they slide through it, the same way the reference cuts off the left/right-most cards mid-shape.
+ * The curved/panoramic feel comes from each card's own wavy top/bottom edge (see
+ * CategoryCard) — the track itself is a plain rectangular window that just crops cards
+ * horizontally as they slide in and out, the same way the reference cuts the left/right-most
+ * cards off mid-shape.
  */
 export function CategoryNav({ categories }: { categories: CategoryCardData[] }) {
   const visibleCount = useVisibleCount();
@@ -152,7 +165,6 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
   const reducedMotion = reducedMotionPreference ?? false;
   const total = categories.length;
   const hasEnoughToScroll = total > 1;
-  const clipId = useId();
 
   const [trackRef, trackWidth] = useElementWidth<HTMLDivElement>();
   const cardWidth = trackWidth > 0 ? trackWidth / visibleCount : 0;
@@ -321,20 +333,6 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
       onFocusCapture={() => setIsFocused(true)}
       onBlurCapture={() => setIsFocused(false)}
     >
-      {/* Shared wave boundary every card is cropped by — a shallow curve along the top and
-          bottom edges of the whole strip, the panoramic cue in the reference. Defined once in
-          objectBoundingBox units so it scales to the track's actual box at any breakpoint. */}
-      <svg width={0} height={0} aria-hidden="true" focusable="false">
-        <defs>
-          <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-            <path
-              d="M0,0.12 C0.15,0.02 0.35,0.09 0.5,0.05 C0.65,0.01 0.85,0.1 1,0.16
-                 L1,0.86 C0.85,0.92 0.65,0.99 0.5,0.955 C0.35,0.92 0.15,0.985 0,0.9 Z"
-            />
-          </clipPath>
-        </defs>
-      </svg>
-
       <div
         ref={trackRef}
         role="group"
@@ -346,8 +344,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={handleTrackClickCapture}
-        className="relative h-45 touch-pan-y select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
-        style={{ clipPath: `url(#${clipId})` }}
+        className="relative h-45 touch-pan-y select-none overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
       >
         {cardWidth > 0
           ? categories.map((category, i) => (
