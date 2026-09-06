@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -63,44 +63,31 @@ function useElementWidth<T extends HTMLElement>() {
   return [ref, width] as const;
 }
 
-/** Every card gets the same gentle wave carved into its own top/bottom edges — a shape that
- * belongs to the card itself, not to where it happens to sit in the carousel. Defined once per
- * card instance in objectBoundingBox units so it scales to that card's own box at any breakpoint. */
 function CategoryCard({ category }: { category: CategoryCardData }) {
-  const clipId = useId();
   return (
-    <div className="relative h-full">
-      <svg width={0} height={0} aria-hidden="true" focusable="false">
-        <defs>
-          <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-            <path d="M0,0.08 C0.3,0 0.7,0.05 1,0.02 L1,0.95 C0.7,1 0.3,0.93 0,0.98 Z" />
-          </clipPath>
-        </defs>
-      </svg>
-      <Link
-        href={`/divisions/${category.slug}`}
-        style={{ backgroundColor: category.bgColor || "#EDEDED", clipPath: `url(#${clipId})` }}
-        className="flex h-full min-h-[180px] flex-col items-center justify-center gap-4 px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
-        draggable={false}
-      >
-        <div className="relative aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
-          {category.iconSrc ? (
-            <Image
-              src={category.iconSrc}
-              alt=""
-              fill
-              sizes="160px"
-              className="pointer-events-none object-contain"
-              aria-hidden="true"
-              draggable={false}
-            />
-          ) : null}
-        </div>
-        <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
-          {category.name}
-        </span>
-      </Link>
-    </div>
+    <Link
+      href={`/divisions/${category.slug}`}
+      style={{ backgroundColor: category.bgColor || "#EDEDED" }}
+      className="flex h-full min-h-[180px] flex-col items-center justify-center gap-4 rounded-3xl px-2 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_16px_32px_-12px_rgba(20,30,80,0.35)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:min-h-[200px] sm:gap-5 sm:py-8 lg:min-h-[228px]"
+      draggable={false}
+    >
+      <div className="relative aspect-square w-[52%] sm:w-[56%] lg:w-[60%]">
+        {category.iconSrc ? (
+          <Image
+            src={category.iconSrc}
+            alt=""
+            fill
+            sizes="160px"
+            className="pointer-events-none object-contain"
+            aria-hidden="true"
+            draggable={false}
+          />
+        ) : null}
+      </div>
+      <span className="font-expanded text-xs leading-snug font-bold uppercase tracking-wide text-[#2F2F2F] sm:text-sm">
+        {category.name}
+      </span>
+    </Link>
   );
 }
 
@@ -111,7 +98,7 @@ function CategoryCard({ category }: { category: CategoryCardData }) {
  * about a "start" or "end" of the list. The only animated property is `x` (a plain horizontal
  * translate) — no scale, no rotation, no depth, no opacity fade. Cards keep a uniform flat
  * rectangular size the whole way across; entering/leaving the viewport is handled entirely by
- * the wave-shaped clip on the track (see CategoryNav), not by the card itself.
+ * the track's own horizontal crop (see CategoryNav), not by the card itself.
  */
 function ConveyorCard({
   category,
@@ -154,10 +141,12 @@ function ConveyorCard({
  * every animation frame (a slow drift, not a tick); buttons, keyboard and drag all move the
  * same value with spring easing (or live 1:1 tracking while dragging) instead of jumping.
  *
- * The curved/panoramic feel comes from each card's own wavy top/bottom edge (see
- * CategoryCard) — the track itself is a plain rectangular window that just crops cards
- * horizontally as they slide in and out, the same way the reference cuts the left/right-most
- * cards off mid-shape.
+ * Cards themselves are plain flat rounded rectangles the whole time — per the source Figma file
+ * (node 70:5), each card is a simple rounded-rectangle, never a warped or clipped shape. The
+ * panoramic/cylinder feel comes entirely from two large ellipses sitting *behind* the strip as a
+ * decorative backdrop (matching the source 1:1: two ellipse layers, not a per-card effect),
+ * peeking out above, below and slightly past the sides of the row — nothing about them ever
+ * touches or masks a card.
  */
 export function CategoryNav({ categories }: { categories: CategoryCardData[] }) {
   const visibleCount = useVisibleCount();
@@ -333,6 +322,22 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
       onFocusCapture={() => setIsFocused(true)}
       onBlurCapture={() => setIsFocused(false)}
     >
+      {/* Panoramic "track" backdrop, straight from the reference: two wide, flat ellipses sitting
+          behind the strip, peeking out above, below and slightly past its sides. Cards stay
+          plain flat rectangles the whole time — this is purely a decorative background shape,
+          not a mask or clip on the cards. Sized as percentages of the track's own box so it
+          scales cleanly at every breakpoint without per-breakpoint tuning. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute z-0 rounded-[50%] bg-entaj-light-grey"
+        style={{ left: "-6%", top: "-58%", width: "112%", height: "78%" }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute z-0 rounded-[50%] bg-entaj-light-grey"
+        style={{ left: "-6%", top: "80%", width: "112%", height: "78%" }}
+      />
+
       <div
         ref={trackRef}
         role="group"
@@ -344,7 +349,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={handleTrackClickCapture}
-        className="relative h-45 touch-pan-y select-none overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
+        className="relative z-10 h-45 touch-pan-y select-none overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
       >
         {cardWidth > 0
           ? categories.map((category, i) => (
@@ -364,7 +369,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         type="button"
         aria-label="Previous categories"
         onClick={handlePrev}
-        className="absolute top-1/2 -left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-left-4"
+        className="absolute top-1/2 -left-3 z-20 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-left-4"
       >
         <ChevronLeft className="size-5" />
       </button>
@@ -372,7 +377,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         type="button"
         aria-label="Next categories"
         onClick={handleNext}
-        className="absolute top-1/2 -right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-right-4"
+        className="absolute top-1/2 -right-3 z-20 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-right-4"
       >
         <ChevronRight className="size-5" />
       </button>
