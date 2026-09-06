@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -14,15 +14,12 @@ import {
   type MotionValue,
 } from "framer-motion";
 
-/** Continuous autoplay drift speed, in card-widths per second — a slow panoramic pan, not a tick. */
+/** Continuous autoplay drift speed, in card-widths per second — a slow conveyor pan, not a tick. */
 const AUTOPLAY_SPEED = 0.22;
 /** Minimum horizontal drag, in px, before a pointer gesture counts as a swipe (not a tap). */
 const SWIPE_THRESHOLD_PX = 40;
 /** How long a manual interaction (button/swipe) suppresses autoplay before it resumes. */
 const MANUAL_PAUSE_MS = 2200;
-/** Card-width fraction used as the horizontal step between neighboring offsets — kept below 1
- * so cards overlap slightly as they curve away from center, like a panoramic shelf. */
-const SPACING_FACTOR = 0.62;
 
 export interface CategoryCardData {
   id: number;
@@ -95,15 +92,15 @@ function CategoryCard({ category }: { category: CategoryCardData }) {
 }
 
 /**
- * One card's position in the panoramic band, derived from its fixed index and the carousel's
- * continuous (never-snapping) `position` value: `offset` is the signed distance from center,
- * wrapped to the shortest path around the loop so the transform math never has to know about
- * a "start" or "end" of the list. Everything else (x/z/rotateY/scale/opacity) is a pure
- * function of that offset, recomputed by Framer Motion on every position tick without a React
- * re-render — center sits flat and full-size, and cards curve, recede and fade as |offset|
- * grows, exactly like passing through the middle of a curved shelf.
+ * One card's slot in the horizontal conveyor, derived from its fixed index and the carousel's
+ * continuous (never-snapping) `position` value: `offset` is the signed distance from the
+ * left-most slot, wrapped to the shortest path around the loop so the math never needs to know
+ * about a "start" or "end" of the list. The only animated property is `x` (a plain horizontal
+ * translate) — no scale, no rotation, no depth, no opacity fade. Cards keep a uniform flat
+ * rectangular size the whole way across; entering/leaving the viewport is handled entirely by
+ * the wave-shaped clip on the track (see CategoryNav), not by the card itself.
  */
-function CoverflowCard({
+function ConveyorCard({
   category,
   index,
   total,
@@ -122,36 +119,14 @@ function CoverflowCard({
     if (raw < -total / 2) raw += total;
     return raw;
   });
-
-  const spacing = cardWidth * SPACING_FACTOR;
-  const x = useTransform(offset, (o) => o * spacing);
-  const z = useTransform(offset, (o) => -Math.min(Math.abs(o), 4) * cardWidth * 0.34);
-  const rotateY = useTransform(offset, (o) => Math.max(-3.4, Math.min(3.4, o)) * -15);
-  const scale = useTransform(offset, (o) => Math.max(0.56, 1.05 - Math.min(Math.abs(o), 3) * 0.16));
-  const opacity = useTransform(offset, (o) => {
-    const abs = Math.abs(o);
-    if (abs <= 1.35) return 1;
-    if (abs >= 3) return 0;
-    return 1 - (abs - 1.35) / 1.65;
-  });
-  const zIndex = useTransform(offset, (o) => Math.round(1000 - Math.abs(o) * 10));
+  const x = useTransform(offset, (o) => o * cardWidth);
 
   return (
     <motion.div
-      className="absolute left-1/2 will-change-transform"
-      style={{
-        top: "50%",
-        marginLeft: -cardWidth / 2,
-        width: cardWidth,
-        x,
-        z,
-        rotateY,
-        scale,
-        opacity,
-        zIndex,
-      }}
+      className="absolute top-0 left-1/2 h-full will-change-transform"
+      style={{ marginLeft: -cardWidth / 2, width: cardWidth, x }}
     >
-      <div className="-translate-y-1/2 px-2 sm:px-2.5 lg:px-3">
+      <div className="h-full px-2 sm:px-2.5 lg:px-3">
         <CategoryCard category={category} />
       </div>
     </motion.div>
@@ -159,12 +134,17 @@ function CoverflowCard({
 }
 
 /**
- * Panoramic/coverflow carousel: cards live at fixed indices, and a single continuous
- * `position` value (never a discrete step index) drives every card's curve via CoverflowCard
+ * Horizontal conveyor/panorama carousel: cards live at fixed indices, and a single continuous
+ * `position` value (never a discrete step index) drives every card's `x` via ConveyorCard
  * above. Looping is just modulo arithmetic on that continuous value — there's no clone array
  * and no "snap back" moment, so the wrap is inherently seamless. Autoplay advances `position`
  * every animation frame (a slow drift, not a tick); buttons, keyboard and drag all move the
  * same value with spring easing (or live 1:1 tracking while dragging) instead of jumping.
+ *
+ * The curved/panoramic feel comes entirely from a single SVG clip-path applied to the track's
+ * outer viewport — a shallow wave along the top and bottom edges — not from any per-card
+ * transform. Cards stay flat rectangles and are simply cropped by that shared curved window as
+ * they slide through it, the same way the reference cuts off the left/right-most cards mid-shape.
  */
 export function CategoryNav({ categories }: { categories: CategoryCardData[] }) {
   const visibleCount = useVisibleCount();
@@ -172,6 +152,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
   const reducedMotion = reducedMotionPreference ?? false;
   const total = categories.length;
   const hasEnoughToScroll = total > 1;
+  const clipId = useId();
 
   const [trackRef, trackWidth] = useElementWidth<HTMLDivElement>();
   const cardWidth = trackWidth > 0 ? trackWidth / visibleCount : 0;
@@ -221,7 +202,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
     if (!autoplayActive) return;
     const next = position.get() + (delta / 1000) * AUTOPLAY_SPEED;
     // Wrap the running total so it never drifts into float-precision territory over a
-    // long-lived tab — CoverflowCard's own modulo math makes this a visual no-op.
+    // long-lived tab — ConveyorCard's own modulo math makes this a visual no-op.
     position.set(total > 0 ? next % total : next);
   });
 
@@ -287,10 +268,9 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
     (event: React.PointerEvent<HTMLDivElement>) => {
       const startX = dragStartXRef.current;
       if (startX === null || cardWidth === 0) return;
-      const spacing = cardWidth * SPACING_FACTOR;
       const deltaPx = event.clientX - startX;
       if (Math.abs(deltaPx) > SWIPE_THRESHOLD_PX / 2) suppressClickRef.current = true;
-      position.set(dragStartPositionRef.current - deltaPx / spacing);
+      position.set(dragStartPositionRef.current - deltaPx / cardWidth);
     },
     [cardWidth, position],
   );
@@ -341,6 +321,20 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
       onFocusCapture={() => setIsFocused(true)}
       onBlurCapture={() => setIsFocused(false)}
     >
+      {/* Shared wave boundary every card is cropped by — a shallow curve along the top and
+          bottom edges of the whole strip, the panoramic cue in the reference. Defined once in
+          objectBoundingBox units so it scales to the track's actual box at any breakpoint. */}
+      <svg width={0} height={0} aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id={clipId} clipPathUnits="objectBoundingBox">
+            <path
+              d="M0,0.12 C0.15,0.02 0.35,0.09 0.5,0.05 C0.65,0.01 0.85,0.1 1,0.16
+                 L1,0.86 C0.85,0.92 0.65,0.99 0.5,0.955 C0.35,0.92 0.15,0.985 0,0.9 Z"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+
       <div
         ref={trackRef}
         role="group"
@@ -352,12 +346,12 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={handleTrackClickCapture}
-        className="relative h-54 touch-pan-y select-none overflow-x-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-59 lg:h-66"
-        style={{ perspective: 1400 }}
+        className="relative h-45 touch-pan-y select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
+        style={{ clipPath: `url(#${clipId})` }}
       >
         {cardWidth > 0
           ? categories.map((category, i) => (
-              <CoverflowCard
+              <ConveyorCard
                 key={category.id}
                 category={category}
                 index={i}
@@ -373,7 +367,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         type="button"
         aria-label="Previous categories"
         onClick={handlePrev}
-        className="absolute top-1/2 -left-3 z-1001 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-left-4"
+        className="absolute top-1/2 -left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-left-4"
       >
         <ChevronLeft className="size-5" />
       </button>
@@ -381,7 +375,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         type="button"
         aria-label="Next categories"
         onClick={handleNext}
-        className="absolute top-1/2 -right-3 z-1001 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-right-4"
+        className="absolute top-1/2 -right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-right-4"
       >
         <ChevronRight className="size-5" />
       </button>
