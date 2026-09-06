@@ -91,22 +91,15 @@ function CategoryCard({ category }: { category: CategoryCardData }) {
   );
 }
 
-/** Max tilt/shrink applied only to cards right at the viewport's edge — see ConveyorCard. */
-const EDGE_MAX_ROTATE_DEG = 16;
-const EDGE_MAX_SCALE_DROP = 0.08;
-
 /**
  * One card's slot in the horizontal conveyor, derived from its fixed index and the carousel's
  * continuous (never-snapping) `position` value: `offset` is the signed distance from the
  * *track's own center* (in card-width units, since a card sits centered when offset is 0),
  * wrapped to the shortest path around the loop so the math never needs to know about a "start"
- * or "end" of the list. `x` is a plain horizontal translate — the whole strip's motion is just
- * that, no scale/rotation drives the actual conveying. `rotateY`/`scale` add a light bend that
- * only kicks in within the last card-or-so of the visible span (an ease-in curve of the same
- * `edgeT` used below), matching where the curved backdrop from CategoryNav bulges — cards stay
- * flat rectangles across the vast majority of the strip and only tilt as they genuinely reach
- * the edge of the panoramic window, so it reads as entering/leaving a curved surface rather than
- * a per-card 3D effect.
+ * or "end" of the list. The only animated property is `x` (a plain horizontal translate) — no
+ * scale, no rotation, no depth, no opacity fade. Cards keep a uniform flat rectangular size the
+ * whole way across; entering/leaving the viewport is handled entirely by the track's own
+ * horizontal crop (see CategoryNav), not by the card itself.
  */
 function ConveyorCard({
   category,
@@ -114,14 +107,12 @@ function ConveyorCard({
   total,
   position,
   cardWidth,
-  visibleCount,
 }: {
   category: CategoryCardData;
   index: number;
   total: number;
   position: MotionValue<number>;
   cardWidth: number;
-  visibleCount: number;
 }) {
   const offset = useTransform(position, (pos) => {
     let raw = (index - pos) % total;
@@ -131,22 +122,10 @@ function ConveyorCard({
   });
   const x = useTransform(offset, (o) => o * cardWidth);
 
-  const halfSpan = visibleCount / 2;
-  const edgeT = useTransform(offset, (o) => Math.min(Math.abs(o) / halfSpan, 1) ** 2);
-  const rotateY = useTransform([offset, edgeT], ([o, t]) => Math.sign(o as number) * (t as number) * -EDGE_MAX_ROTATE_DEG);
-  const scale = useTransform(edgeT, (t) => 1 - t * EDGE_MAX_SCALE_DROP);
-
   return (
     <motion.div
       className="absolute top-0 left-1/2 h-full will-change-transform"
-      style={{
-        marginLeft: -cardWidth / 2,
-        width: cardWidth,
-        x,
-        rotateY,
-        scale,
-        transformPerspective: 900,
-      }}
+      style={{ marginLeft: -cardWidth / 2, width: cardWidth, x }}
     >
       <div className="h-full px-2 sm:px-2.5 lg:px-3">
         <CategoryCard category={category} />
@@ -156,19 +135,12 @@ function ConveyorCard({
 }
 
 /**
- * Horizontal conveyor/panorama carousel: cards live at fixed indices, and a single continuous
+ * Horizontal conveyor carousel: cards live at fixed indices, and a single continuous
  * `position` value (never a discrete step index) drives every card's `x` via ConveyorCard
  * above. Looping is just modulo arithmetic on that continuous value — there's no clone array
  * and no "snap back" moment, so the wrap is inherently seamless. Autoplay advances `position`
  * every animation frame (a slow drift, not a tick); buttons, keyboard and drag all move the
  * same value with spring easing (or live 1:1 tracking while dragging) instead of jumping.
- *
- * Cards themselves are plain flat rounded rectangles the whole time — per the source Figma file
- * (node 70:5), each card is a simple rounded-rectangle, never a warped or clipped shape. The
- * panoramic/cylinder feel comes entirely from two large ellipses sitting *behind* the strip as a
- * decorative backdrop (matching the source 1:1: two ellipse layers, not a per-card effect),
- * peeking out above, below and slightly past the sides of the row — nothing about them ever
- * touches or masks a card.
  */
 export function CategoryNav({ categories }: { categories: CategoryCardData[] }) {
   const visibleCount = useVisibleCount();
@@ -344,22 +316,6 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
       onFocusCapture={() => setIsFocused(true)}
       onBlurCapture={() => setIsFocused(false)}
     >
-      {/* Panoramic "track" backdrop, straight from the reference: two wide, flat ellipses sitting
-          behind the strip, peeking out above, below and slightly past its sides. Cards stay
-          plain flat rectangles the whole time — this is purely a decorative background shape,
-          not a mask or clip on the cards. Sized as percentages of the track's own box so it
-          scales cleanly at every breakpoint without per-breakpoint tuning. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute z-0 rounded-[50%] bg-entaj-light-grey"
-        style={{ left: "-6%", top: "-58%", width: "112%", height: "78%" }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute z-0 rounded-[50%] bg-entaj-light-grey"
-        style={{ left: "-6%", top: "80%", width: "112%", height: "78%" }}
-      />
-
       <div
         ref={trackRef}
         role="group"
@@ -371,7 +327,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={handleTrackClickCapture}
-        className="relative z-10 h-45 touch-pan-y select-none overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
+        className="relative h-45 touch-pan-y select-none overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-entaj-blue sm:h-50 lg:h-57"
       >
         {cardWidth > 0
           ? categories.map((category, i) => (
@@ -382,7 +338,6 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
                 total={total}
                 position={position}
                 cardWidth={cardWidth}
-                visibleCount={visibleCount}
               />
             ))
           : null}
@@ -392,7 +347,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         type="button"
         aria-label="Previous categories"
         onClick={handlePrev}
-        className="absolute top-1/2 -left-3 z-20 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-left-4"
+        className="absolute top-1/2 -left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-left-4"
       >
         <ChevronLeft className="size-5" />
       </button>
@@ -400,7 +355,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         type="button"
         aria-label="Next categories"
         onClick={handleNext}
-        className="absolute top-1/2 -right-3 z-20 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-right-4"
+        className="absolute top-1/2 -right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-entaj-blue shadow-lg transition-transform duration-150 hover:scale-105 hover:bg-entaj-light-grey focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-entaj-blue sm:-right-4"
       >
         <ChevronRight className="size-5" />
       </button>
