@@ -64,9 +64,9 @@ export default async function DivisionProductsPage({
             >
               {division.name}
             </GradientHeading>
-            {division.subtitle ? (
+            {division.description ? (
               <p className="mx-auto mt-4 max-w-2xl text-center font-expanded text-lg text-entaj-medium-grey">
-                {division.subtitle}
+                {division.description}
               </p>
             ) : null}
           </Reveal>
