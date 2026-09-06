@@ -91,14 +91,22 @@ function CategoryCard({ category }: { category: CategoryCardData }) {
   );
 }
 
+/** Max tilt/shrink applied only to cards right at the viewport's edge — see ConveyorCard. */
+const EDGE_MAX_ROTATE_DEG = 16;
+const EDGE_MAX_SCALE_DROP = 0.08;
+
 /**
  * One card's slot in the horizontal conveyor, derived from its fixed index and the carousel's
  * continuous (never-snapping) `position` value: `offset` is the signed distance from the
- * left-most slot, wrapped to the shortest path around the loop so the math never needs to know
- * about a "start" or "end" of the list. The only animated property is `x` (a plain horizontal
- * translate) — no scale, no rotation, no depth, no opacity fade. Cards keep a uniform flat
- * rectangular size the whole way across; entering/leaving the viewport is handled entirely by
- * the track's own horizontal crop (see CategoryNav), not by the card itself.
+ * *track's own center* (in card-width units, since a card sits centered when offset is 0),
+ * wrapped to the shortest path around the loop so the math never needs to know about a "start"
+ * or "end" of the list. `x` is a plain horizontal translate — the whole strip's motion is just
+ * that, no scale/rotation drives the actual conveying. `rotateY`/`scale` add a light bend that
+ * only kicks in within the last card-or-so of the visible span (an ease-in curve of the same
+ * `edgeT` used below), matching where the curved backdrop from CategoryNav bulges — cards stay
+ * flat rectangles across the vast majority of the strip and only tilt as they genuinely reach
+ * the edge of the panoramic window, so it reads as entering/leaving a curved surface rather than
+ * a per-card 3D effect.
  */
 function ConveyorCard({
   category,
@@ -106,12 +114,14 @@ function ConveyorCard({
   total,
   position,
   cardWidth,
+  visibleCount,
 }: {
   category: CategoryCardData;
   index: number;
   total: number;
   position: MotionValue<number>;
   cardWidth: number;
+  visibleCount: number;
 }) {
   const offset = useTransform(position, (pos) => {
     let raw = (index - pos) % total;
@@ -121,10 +131,22 @@ function ConveyorCard({
   });
   const x = useTransform(offset, (o) => o * cardWidth);
 
+  const halfSpan = visibleCount / 2;
+  const edgeT = useTransform(offset, (o) => Math.min(Math.abs(o) / halfSpan, 1) ** 2);
+  const rotateY = useTransform([offset, edgeT], ([o, t]) => Math.sign(o as number) * (t as number) * -EDGE_MAX_ROTATE_DEG);
+  const scale = useTransform(edgeT, (t) => 1 - t * EDGE_MAX_SCALE_DROP);
+
   return (
     <motion.div
       className="absolute top-0 left-1/2 h-full will-change-transform"
-      style={{ marginLeft: -cardWidth / 2, width: cardWidth, x }}
+      style={{
+        marginLeft: -cardWidth / 2,
+        width: cardWidth,
+        x,
+        rotateY,
+        scale,
+        transformPerspective: 900,
+      }}
     >
       <div className="h-full px-2 sm:px-2.5 lg:px-3">
         <CategoryCard category={category} />
@@ -360,6 +382,7 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
                 total={total}
                 position={position}
                 cardWidth={cardWidth}
+                visibleCount={visibleCount}
               />
             ))
           : null}
