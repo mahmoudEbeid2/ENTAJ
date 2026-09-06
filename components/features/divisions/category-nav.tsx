@@ -279,7 +279,17 @@ export function CategoryNav({ categories }: { categories: CategoryCardData[] }) 
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
       moveTo(Math.round(position.get()));
-      if (suppressClickRef.current) triggerManualPause();
+      if (suppressClickRef.current) {
+        triggerManualPause();
+        // handleTrackClickCapture normally resets this flag when the resulting click fires, but
+        // a release outside the card (the common case for a real swipe) never fires a click
+        // there at all — without this, the flag would stay stuck and silently swallow every
+        // future click. Cleared on the next tick so a click that *does* fire this same gesture
+        // is still caught first.
+        setTimeout(() => {
+          suppressClickRef.current = false;
+        }, 0);
+      }
     },
     [moveTo, position, triggerManualPause],
   );
