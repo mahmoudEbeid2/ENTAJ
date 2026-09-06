@@ -13,6 +13,7 @@ export function MobileNav({
   logoSrc,
   siteName,
   strong = false,
+  color = null,
 }: {
   items: NavLinkItem[];
   logoSrc: string | null;
@@ -20,6 +21,9 @@ export function MobileNav({
   /** Slightly more deliberate trigger treatment for the solid internal-page header, where the
    * backdrop is a flat brand color rather than a variable photo. */
   strong?: boolean;
+  /** Category color to theme the slide-out sheet with, when on a category page. Falls back to
+   * the default brand gradient when not provided. */
+  color?: string | null;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -44,7 +48,11 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="flex w-[min(320px,85vw)] flex-col gap-0 border-l-0 bg-gradient-entaj p-0 text-white shadow-2xl"
+        className={cn(
+          "flex w-[min(320px,85vw)] flex-col gap-0 border-l-0 p-0 text-white shadow-2xl",
+          !color && "bg-gradient-entaj",
+        )}
+        style={color ? { backgroundColor: color } : undefined}
       >
         <SheetHeader className="shrink-0 border-b border-white/15 px-6 py-6">
           <SheetTitle className="sr-only">Navigation menu</SheetTitle>

@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ComingSoonPage } from "@/components/layout/coming-soon-page";
+import { CategoryThemeProvider } from "@/components/layout/category-theme-context";
 import { getSiteSettings } from "@/lib/data/site";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ export default async function PublicLayout({ children }: { children: React.React
   }
 
   return (
-    <>
+    <CategoryThemeProvider>
       {/* Scroll-reveal elements start hidden client-side; without JS they must stay visible. */}
       <noscript>
         <style>{`.js-reveal { opacity: 1 !important; transform: none !important; }`}</style>
@@ -20,6 +21,6 @@ export default async function PublicLayout({ children }: { children: React.React
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />
-    </>
+    </CategoryThemeProvider>
   );
 }

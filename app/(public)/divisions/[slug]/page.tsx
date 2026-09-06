@@ -9,6 +9,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { EmptyProductsState } from "@/components/ui/empty-products-state";
 import { Reveal } from "@/components/ui/reveal";
 import { PageBreadcrumb } from "@/components/layout/page-breadcrumb";
+import { CategoryThemeSync } from "@/components/layout/category-theme-context";
 
 // Same ISR pattern as /divisions: no rebuild needed for future division/product changes to
 // show up here — see app/(public)/divisions/page.tsx for the full explanation.
@@ -46,6 +47,7 @@ export default async function DivisionProductsPage({
 
   return (
     <>
+      <CategoryThemeSync color={division.bgColor} />
       <PageBreadcrumb
         items={[
           { label: "Divisions", href: "/divisions" },
@@ -55,7 +57,11 @@ export default async function DivisionProductsPage({
       <Section className="py-10 lg:py-16">
         <Container>
           <Reveal>
-            <GradientHeading as="h1" className="text-center text-3xl lg:text-[48px]">
+            <GradientHeading
+              as="h1"
+              className="text-center text-3xl lg:text-[48px]"
+              color={division.bgColor}
+            >
               {division.name}
             </GradientHeading>
             {division.subtitle ? (
