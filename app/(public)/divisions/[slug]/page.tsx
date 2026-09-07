@@ -95,11 +95,15 @@ export default async function DivisionProductsPage({
                 </Reveal>
               ))}
             </div>
-          ) : (
+          ) : specRows.length === 0 ? (
+            // "Products coming soon" only applies to a division whose page has nothing else
+            // to show yet. A division with a populated Product Categories table (e.g. Safety
+            // Equipment & PPE, whose Figma page has no product grid at all) has real content
+            // below, so the placeholder would be redundant/wrong there.
             <Reveal variant="scale">
               <EmptyProductsState />
             </Reveal>
-          )}
+          ) : null}
         </Container>
       </Section>
 
