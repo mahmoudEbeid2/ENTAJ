@@ -1,0 +1,1 @@
+ALTER TABLE `division_spec_rows` ADD `icon_path` varchar(500);

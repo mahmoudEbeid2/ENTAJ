@@ -8,6 +8,7 @@ export interface ProductSpecRow {
   name: string;
   spec?: string | null;
   description?: string | null;
+  iconPath?: string | null;
 }
 
 function RowWrapper({

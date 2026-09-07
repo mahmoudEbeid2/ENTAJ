@@ -91,6 +91,7 @@ export const divisionSpecRows = mysqlTable(
     name: varchar("name", { length: 255 }).notNull(),
     spec: varchar("spec", { length: 255 }),
     description: varchar("description", { length: 500 }),
+    iconPath: varchar("icon_path", { length: 500 }),
     sortOrder: int("sort_order").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),
     ...timestamps,

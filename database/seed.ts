@@ -338,8 +338,9 @@ async function main() {
         ? productIdByDivisionAndName(division.id, row.linkedProductName)
         : null,
       name: row.name,
-      spec: row.spec,
+      spec: row.spec ?? null,
       description: row.description,
+      iconPath: row.iconPath ?? null,
       sortOrder: i,
     }));
   });
