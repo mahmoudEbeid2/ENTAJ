@@ -17,6 +17,7 @@ import { WhyUsCard } from "@/components/ui/why-us-card";
 import { RegionBlock } from "@/components/ui/region-block";
 import { CtaPanel } from "@/components/ui/cta-panel";
 import { WhatSetsApartPanel } from "@/components/features/home/what-sets-apart-panel";
+import { SafetyResponsibilitySection } from "@/components/features/home/safety-responsibility-section";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoMeta("home");
@@ -115,6 +116,14 @@ export default async function HomePage() {
           </Container>
         </div>
       ) : null}
+
+      <Section className="pt-0 pb-8 lg:pb-10">
+        <Container>
+          <Reveal>
+            <SafetyResponsibilitySection />
+          </Reveal>
+        </Container>
+      </Section>
 
       {whatSetsApart ? (
         <Section className="pb-8 lg:pb-10">
