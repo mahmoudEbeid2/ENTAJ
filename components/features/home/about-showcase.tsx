@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 const DASHED_FRAME_SRC = "/assets/illustrations/about-dashed-frame.svg";
+const DESKTOP_COMPOSITION_WIDTH = 1254;
+const DESKTOP_COMPOSITION_HEIGHT = 250;
 
 export function AboutShowcase({
   eyebrow,
@@ -21,10 +26,32 @@ export function AboutShowcase({
   const headingSecond = headingRest.join(" ");
   const paragraphs = body.split("\n\n").filter(Boolean);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const update = () => setScale(Math.min(1, el.offsetWidth / DESKTOP_COMPOSITION_WIDTH));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div>
-      {/* Desktop: pixel-matched to the Figma composition (1254x250 cluster) */}
-      <div className="relative mx-auto hidden h-[250px] w-[1254px] lg:block">
+      {/* Desktop: pixel-matched to the Figma composition (1254x250 cluster), scaled to fit narrower
+       * lg containers (e.g. 1024-1254px) so it never overflows the page horizontally. */}
+      <div
+        ref={wrapperRef}
+        className="relative mx-auto hidden w-full max-w-[1254px] lg:block"
+        style={{ height: DESKTOP_COMPOSITION_HEIGHT * scale }}
+      >
+        <div
+          className="absolute left-0 top-0 h-[250px] w-[1254px] origin-top-left"
+          style={{ transform: `scale(${scale})` }}
+        >
         <div className="absolute left-[150px] top-0 h-[250px] w-[699.92px]">
           <Image src={DASHED_FRAME_SRC} alt="" fill aria-hidden className="pointer-events-none select-none" />
           <div
@@ -64,6 +91,7 @@ export function AboutShowcase({
 
         <div className="absolute right-0 top-[19px] h-[213px] w-[378px] overflow-hidden rounded-[24px]">
           <Image src={imageSrc} alt={imageAlt} fill sizes="378px" className="object-cover" />
+        </div>
         </div>
       </div>
 

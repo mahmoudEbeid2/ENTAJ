@@ -54,7 +54,7 @@ const SAFETY_APPROACH_ITEMS = [
 export function SafetyResponsibilitySection() {
   return (
     <div className="overflow-hidden rounded-[24px] bg-entaj-light-grey">
-      <div className="relative h-9 w-full sm:h-[37px]">
+      <div className="relative h-9 w-full bg-entaj-blue sm:h-[37px]">
         <Image src={BANNER_STRIPES_SRC} alt="" fill sizes="100vw" className="object-cover" aria-hidden="true" />
       </div>
 

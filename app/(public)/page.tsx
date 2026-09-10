@@ -117,14 +117,6 @@ export default async function HomePage() {
         </div>
       ) : null}
 
-      <Section className="pt-0 pb-8 lg:pb-10">
-        <Container>
-          <Reveal>
-            <SafetyResponsibilitySection />
-          </Reveal>
-        </Container>
-      </Section>
-
       {whatSetsApart ? (
         <Section className="pb-8 lg:pb-10">
           <Container>
@@ -184,7 +176,7 @@ export default async function HomePage() {
 
           <div className="grid gap-6 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 lg:gap-x-[100px] lg:gap-y-16">
             {whyUsFeatures.map((feature, index) => (
-              <Reveal key={feature.id} delay={(index % 2) * 90}>
+              <Reveal key={feature.id} delay={(index % 2) * 90} className="min-w-0">
                 <WhyUsCard
                   number={feature.number}
                   title={feature.title}
@@ -252,6 +244,14 @@ export default async function HomePage() {
               />
             </Reveal>
           ) : null}
+        </Container>
+      </Section>
+
+      <Section className="pt-8 pb-8 lg:pt-10 lg:pb-10">
+        <Container>
+          <Reveal>
+            <SafetyResponsibilitySection />
+          </Reveal>
         </Container>
       </Section>
     </>
