@@ -72,6 +72,8 @@ In the Node.js App page, add each variable from `.env.example`:
 DATABASE_URL=mysql://<cpanel_db_user>:<password>@localhost:3306/<cpanel_db_name>
 JWT_SECRET=<long random secret>
 JWT_EXPIRES_IN=7d
+NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=<generate with: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))">
+
 ADMIN_EMAIL=<initial admin email>
 ADMIN_PASSWORD=<initial admin password>
 RESEND_API_KEY=<your Resend key>
@@ -128,3 +130,10 @@ pick up changes until restarted.
 - **Product/page images 404**: the real files under `storage/` weren't
   uploaded (git-ignored, see step 3), or `STORAGE_ROOT`/permissions are wrong.
 - **Login/JWT issues**: `JWT_SECRET` not set or changed after users logged in.
+- **"Server Action was not found on the server" after a deploy**: expected
+  for any admin tab left open from before the redeploy *unless*
+  `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` is set — without it, every `next
+  build` gets a new random key, invalidating action IDs already-loaded pages
+  are holding. Set the env var (see step 5) and redeploy once; after that,
+  redeploys no longer break open admin tabs. If it still happens with the
+  key set, the affected tab predates that fix — a normal refresh resolves it.
