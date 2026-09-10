@@ -2,6 +2,7 @@ import Image from "next/image";
 
 const HELMET_ICON_SRC = "/assets/icons/icon-safety-helmet.svg";
 const BANNER_STRIPES_SRC = "/assets/illustrations/safety-banner-stripes.svg";
+const HARDHAT_PHOTO_SRC = "/assets/illustrations/safety-hardhat-photo.png";
 
 const INTRO_PARAGRAPHS = [
   "At ENTAJ, safety is an essential part of how we source, store, handle, and deliver raw materials. We understand that every product requires careful management throughout its journey—from the supplier's facility to the customer's operations.",
@@ -49,8 +50,8 @@ const SAFETY_APPROACH_ITEMS = [
 ];
 
 /** Home page "Safety & Responsibility" section, sourced pixel-for-pixel from Figma file
- * FN3JXlqZI66ZzGFGnZaTv9 (page "SAFETY & RESPONSIBILITY"). Replaces the old "Safety
- * Equipment & PPE" DIVISIONS category, which moved here 2026-09-09. */
+ * FN3JXlqZI66ZzGFGnZaTv9 (node 18:2, page "SAFETY & RESPONSIBILITY"). Replaces the old
+ * "Safety Equipment & PPE" DIVISIONS category, which moved here 2026-09-09. */
 export function SafetyResponsibilitySection() {
   return (
     <div className="overflow-hidden rounded-[24px] bg-entaj-light-grey">
@@ -75,10 +76,21 @@ export function SafetyResponsibilitySection() {
           Safe Materials. Responsible Handling. Secure Delivery.
         </p>
 
-        <div className="mt-6 flex max-w-[934px] flex-col gap-4 text-sm font-light leading-relaxed text-entaj-dark-grey sm:mt-8">
-          {INTRO_PARAGRAPHS.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
+        <div className="mt-6 flex max-w-[934px] flex-col-reverse gap-6 sm:mt-8 lg:flex-row lg:items-start lg:gap-8">
+          <div className="flex flex-1 flex-col gap-4 text-sm font-light leading-relaxed text-entaj-dark-grey">
+            {INTRO_PARAGRAPHS.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
+          <div className="relative aspect-[241/333] w-full max-w-[241px] shrink-0 self-center overflow-hidden rounded-[24px] lg:self-start">
+            <Image
+              src={HARDHAT_PHOTO_SRC}
+              alt="ENTAJ-branded hard hat held by a site worker"
+              fill
+              sizes="(min-width: 1024px) 241px, 60vw"
+              className="object-cover"
+            />
+          </div>
         </div>
 
         <h3 className="mt-10 font-expanded text-2xl text-entaj-blue sm:mt-12">Our Safety Approach</h3>
