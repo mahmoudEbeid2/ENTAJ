@@ -12,7 +12,7 @@ import { HeroCarousel } from "@/components/features/home/hero-carousel";
 import { AboutShowcase } from "@/components/features/home/about-showcase";
 import { WhyEntajBanner } from "@/components/features/home/why-entaj-banner";
 import { StatBlock } from "@/components/ui/stat-block";
-import { CategoryNav } from "@/components/features/divisions/category-nav";
+import { CategoryCoverflowNav } from "@/components/features/home/category-coverflow-nav";
 import { WhyUsCard } from "@/components/ui/why-us-card";
 import { RegionBlock } from "@/components/ui/region-block";
 import { CtaPanel } from "@/components/ui/cta-panel";
@@ -150,7 +150,7 @@ export default async function HomePage() {
               DIVISIONS
             </GradientHeading>
           </Reveal>
-          <CategoryNav
+          <CategoryCoverflowNav
             categories={categories.map((category) => ({
               id: category.id,
               slug: category.slug,
