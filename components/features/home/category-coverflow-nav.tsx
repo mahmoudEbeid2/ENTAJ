@@ -242,9 +242,7 @@ export function CategoryCoverflowNav({ categories }: { categories: CategoryCardD
       aria-label="Product categories"
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => {
-        setIsHovering(false);
         settleDrag();
       }}
       onPointerDown={handlePointerDown}
@@ -271,6 +269,8 @@ export function CategoryCoverflowNav({ categories }: { categories: CategoryCardD
           <div
             key={category.id}
             ref={i === 0 ? cardRef : undefined}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
             className="absolute top-1/2 left-1/2 h-[150px] w-[130px] sm:h-[196px] sm:w-[176px]"
             style={{
               transform: `translate(-50%, -50%) translateX(${x}px) scale(${scale})`,
